@@ -1,5 +1,6 @@
 """
 This script is not finished.
+Run AFTER create_models.py.
 Plan is to extract metadata from a csv and put that metadata 
 into json format, following the latest DataCite schema.
 """
