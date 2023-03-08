@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "figleaf"
+version = "0.1.0"
+description = ""
+authors = ["Virginia Scarlett <virginia.t.scarlett@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+requests = "^2.28.2"
+pandas = "^1.5.3"
+pydantic = "^1.10.6"
+datamodel-code-generator = "^0.17.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

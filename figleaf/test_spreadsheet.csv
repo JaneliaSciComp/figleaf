@@ -1,0 +1,13 @@
+﻿Attr,id,Attr_key,Attr_value
+creators,1,name,Virginia Scarlett
+creators,1,nameType,Personal
+creators,1,nameIdentifiers,0000-0002-4156-2849
+creators,1,nameIdentifierScheme,ORCID
+creators,1,schemeURI,https://orcid.org
+creators,1,Affiliations,"University of California, Berkeley"
+creators,1,Affiliations,HHMI Janelia Research Campus
+creators,2,name,William Shakespeare
+creators,2,nameType,Personal
+titles,1,title,My cool dataset
+publisher,NA,Janelia Research Campus,
+publicationYear,NA,2023,
