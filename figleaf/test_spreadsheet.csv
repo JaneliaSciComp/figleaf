@@ -8,6 +8,7 @@ creators,1,Affiliations,"University of California, Berkeley"
 creators,1,Affiliations,HHMI Janelia Research Campus
 creators,2,name,William Shakespeare
 creators,2,nameType,Personal
-titles,1,title,My cool dataset
+title,NA,title,My cool dataset
+titleType,NA,Subtitle,An exploration of the meaning of life
 publisher,NA,Janelia Research Campus,
 publicationYear,NA,2023,

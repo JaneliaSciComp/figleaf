@@ -42,7 +42,7 @@ def create_creator(creator):
         affiliations = models.Affiliations(__root__ = affiliations)
         new_creator.affiliations = affiliations
     if 'lang' in creator:
-        new_creator.lang = creator['lang']
+        new_creator.lang = creator['lang'] # untested
     return(new_creator)
 
 
@@ -50,8 +50,13 @@ def create_creator(creator):
 # read in the metadata
 data = pd.read_csv('test_spreadsheet.csv', dtype={'id':'Int32'}) # stop pandas from automatically converting int to float
 records = data.to_dict(orient='records')
-
-# Put creator metadata from spreadsheet into a tidy dictionary
+# records looks like:
+# [
+#   {'Attr': 'creators', 'id': 1, 'Attr_key': 'name', 'Attr_value': 'Virginia Scarlett'}, 
+#   {'Attr': 'creators', 'id': 1, 'Attr_key': 'nameType', 'Attr_value': 'Personal'}, 
+#   {'Attr': 'creators', 'id': 1, 'Attr_key': 'nameIdentifiers', 'Attr_value': '0000-0002-4156-2849'},
+#   ... etc.
+#   ]
 
 # First, work on the creator field
 creator_dicts = {} # will look like this:
@@ -83,29 +88,50 @@ for creator_id, creator_dict in creator_dicts.items():
     creators_final[creator_id] = create_creator(creator_dict)
 
 # creators_final looks like this:
-# {
-#   1: Creator(
-#       name='Virginia Scarlett', 
-#       nameType=<NameType.Personal: 'Personal'>, 
-#       givenName=None, 
-#       familyName=None, 
-#       nameIdentifiers=NameIdentifiers(__root__=[NameIdentifier(nameIdentifier='0000-0002-4156-2849', nameIdentifierScheme='ORCID', schemeURI=AnyUrl('https://orcid.org', scheme='https', host='orcid.org', tld='org', host_type='domain'))]), 
-#   affiliations=None, lang=None
-#       ), 
-#   2: Creator(
-#   name='William Shakespeare', 
-#   nameType=<NameType.Personal: 'Personal'>, 
-#   givenName=None, 
-#   familyName=None, 
-#   nameIdentifiers=None, 
-#   affiliations=None, 
-#   lang=None)
-#}
+ # {
+ #   1: Creator(
+ #        name='Virginia Scarlett', 
+ #        nameType=<NameType.Personal: 'Personal'>, 
+ #        givenName=None, 
+ #        familyName=None, 
+ #        nameIdentifiers=NameIdentifiers(__root__=[NameIdentifier(nameIdentifier='0000-0002-4156-2849', nameIdentifierScheme='ORCID', schemeURI=AnyUrl('https://orcid.org', scheme='https', host='orcid.org', tld='org', host_type='domain'))]), 
+ #        affiliations=Affiliations(__root__=[Affiliation(affiliation='University of California, Berkeley'), Affiliation(affiliation='HHMI Janelia Research Campus')]), 
+ #        lang=None), 
+ #    2: Creator(
+ #        name='William Shakespeare', 
+ #        nameType=<NameType.Personal: 'Personal'>, 
+ #        givenName=None, 
+ #        familyName=None, 
+ #        nameIdentifiers=None, 
+ #        affiliations=None, 
+ #        lang=None)
+ #    }
 
 
-# To do next: publisher and publication year
-# Title(s?)
-# Eventually: relatedIdentifiers
+# Note:
+# titleType:Type of the related item title. Use this subproperty to add a subtitle, translation, or alternate title to the main title.
+# The primary title of the related item should not have a titleType subproperty.
+# The titleType subproperty is used when more than a single title is provided. Unless otherwise indicated by titleType, a title is considered to be the main title.
+title_objs = [] 
+# the first Title in the list is the main title
+for record in records:
+    if record['Attr'] == 'title' and record['Attr_key'] == 'title':
+        title_objs[0] = models.Title(name = record['Attr_value'])
+
+# add additional titles, if provided
+for record in records:
+    if record['Attr'] == 'titleType':
+        title_objs.append( 
+            models.Title(
+                name = record['Attr_value'], 
+                titleType = models.TitleType(record['Attr_key']
+                    )
+                )
+
+# To do, at some point, maybe: ^^ add 'lang' to title(s), if provided
+
+
+
 
 
 
