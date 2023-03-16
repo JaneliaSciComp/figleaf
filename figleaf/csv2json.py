@@ -5,6 +5,9 @@ Plan is to extract metadata from a csv, turn those metadata into pydantic object
 for easy manipulation and thorough validation, and then ultimately convert them
 into a json object, following the latest DataCite schema.
 
+NOTE TO SELF: MAYBE WE SHOULD BE TRYING TO GET THESE DICTS INTO JSON OBJECTS
+FIRST, AND THEN CONVERT TO PYDANTIC CLASSES
+
 """
 
 import pandas as pd
