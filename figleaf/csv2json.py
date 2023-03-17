@@ -119,21 +119,14 @@ for creator_id, creator_dict in creator_dicts.items():
 # titleType:Type of the related item title. Use this subproperty to add a subtitle, translation, or alternate title to the main title.
 # The primary title of the related item should not have a titleType subproperty.
 # The titleType subproperty is used when more than a single title is provided. Unless otherwise indicated by titleType, a title is considered to be the main title.
-title_objs = [] 
-# the first Title in the list is the main title
+title_objs = {}
 for record in records:
-    if record['Attr'] == 'title' and record['Attr_key'] == 'title':
-        title_objs[0] = models.Title(name = record['Attr_value'])
-
-# add additional titles, if provided
-for record in records:
+    if record['Attr'] == 'title':
+        title_objs[record['Attr_key']] = models.Title(title = record['Attr_value'])
     if record['Attr'] == 'titleType':
-        title_objs.append( 
-            models.Title(
-                name = record['Attr_value'], 
-                titleType = models.TitleType(record['Attr_key']
-                    )
-                )
+        title_objs[record['Attr_key']] = models.Title(title = record['Attr_value'], titleType = models.TitleType(record['Attr_key']))
+
+
 
 # To do, at some point, maybe: ^^ add 'lang' to title(s), if provided
 
