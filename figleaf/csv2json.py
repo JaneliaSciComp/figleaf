@@ -60,7 +60,7 @@ records = data.to_dict(orient='records')
 #   ... etc.
 #   ]
 
-# resource type. resourceType is mandatory, free text. resourceTypeGeneral is also mandatory, but controlled vocabulary.
+# First, resource type. resourceType is mandatory, free text. resourceTypeGeneral is also mandatory, but controlled vocabulary.
 rT = None
 rTG = None
 for record in records:
@@ -72,7 +72,10 @@ for record in records:
 resourceTypeObj = models.Types(resourceType = rT, resourceTypeGeneral = rTG)
 
 
+# Next, identifier. This field is mandatory, but we can (and must) fill it with nonsense, since we don't have a DOI yet.
+identifier_obj = models.Identifier(identifier = "0", identifierType = "DOI") 
 
+# Next, Creators.
 creator_dicts = {} # will look like this:
 # {
 #    1: {'name': 'Virginia Scarlett', 'nameType': 'Personal', 'nameIdentifiers': '0000-0002-4156-2849', 'nameIdentifierScheme': 'ORCID', 'schemeURI': 'https://orcid.org', 'Affiliations': ['University of California, Berkeley', 'HHMI Janelia Research Campus']}, 
@@ -101,7 +104,7 @@ creators_final = {}
 for creator_id, creator_dict in creator_dicts.items(): 
     creators_final[creator_id] = create_creator(creator_dict)
 
-
+# Next, title(s)
 title_objs = []
 for record in records:
     if record['Attr'] == 'title':
