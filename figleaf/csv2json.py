@@ -102,13 +102,12 @@ for creator_id, creator_dict in creator_dicts.items():
     creators_final[creator_id] = create_creator(creator_dict)
 
 
-
-title_objs = {}
+title_objs = []
 for record in records:
     if record['Attr'] == 'title':
-        title_objs[record['Attr_key']] = models.Title(title = record['Attr_value'])
+        title_objs.append( models.Title(title = record['Attr_value']) )
     if record['Attr'] == 'titleType':
-        title_objs[record['Attr_key']] = models.Title(title = record['Attr_value'], titleType = models.TitleType(record['Attr_key']))
+        title_objs.append( models.Title(title = record['Attr_value'], titleType = models.TitleType(record['Attr_key'])) )
 
 # To do, at some point, maybe: ^^ add 'lang' to title(s), if provided
 
