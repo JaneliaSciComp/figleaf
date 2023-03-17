@@ -69,7 +69,7 @@ for record in records:
     if record['Attr_key'] == 'resourceTypeGeneral':
         rTG = record['Attr_value']
 
-resourceTypeObj = models.Types(resourceType = rT, resourceTypeGeneral = rTG)
+resource_type_obj = models.Types(resourceType = rT, resourceTypeGeneral = rTG)
 
 
 # Next, identifier. This field is mandatory, but we can (and must) fill it with nonsense, since we don't have a DOI yet.
@@ -78,10 +78,9 @@ identifier_obj = models.Identifier(identifier = "0", identifierType = "DOI")
 # Next, Creators.
 creator_dicts = {} # will look like this:
 # {
-#    1: {'name': 'Virginia Scarlett', 'nameType': 'Personal', 'nameIdentifiers': '0000-0002-4156-2849', 'nameIdentifierScheme': 'ORCID', 'schemeURI': 'https://orcid.org', 'Affiliations': ['University of California, Berkeley', 'HHMI Janelia Research Campus']}, 
-#    2: {'name': 'William Shakespeare', 'nameType': 'Personal'}
+#    1 : {'name': 'Virginia Scarlett', 'nameType': 'Personal', 'nameIdentifiers': '0000-0002-4156-2849', 'nameIdentifierScheme': 'ORCID', 'schemeURI': 'https://orcid.org', 'Affiliations': ['University of California, Berkeley', 'HHMI Janelia Research Campus']}, 
+#    2 : {'name': 'William Shakespeare', 'nameType': 'Personal'}
 # }
-
 for record in records:
     if record['Attr'] == 'creators':
         current_attr = record['Attr_key']
@@ -123,6 +122,25 @@ pubYear = None
 for record in records:
     if record['Attr'] == 'publicationYear':
         pubYear = record['Attr_value']
+
+
+my_item = models.Model(
+    types = resource_type_obj,
+    identifiers = identifier_obj,
+    creators = list(creator_dicts.values()),
+    titles = title_objs,
+    publisher = publisher,
+    publicationYear = pubYear   
+    )
+
+# TODO: Traceback (most recent call last):
+#   File "<stdin>", line 1, in <module>
+#   File "pydantic/main.py", line 341, in pydantic.main.BaseModel.__init__
+# pydantic.error_wrappers.ValidationError: 2 validation errors for Model
+# identifiers
+#   value is not a valid list (type=type_error.list)
+# creators -> 0 -> nameIdentifiers -> __root__
+#   value is not a valid list (type=type_error.list)
 
 
 
