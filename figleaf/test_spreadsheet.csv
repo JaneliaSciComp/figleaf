@@ -12,3 +12,5 @@ title,NA,title,My cool dataset
 titleType,NA,Subtitle,An exploration of the meaning of life
 publisher,NA,Janelia Research Campus,
 publicationYear,NA,2023,
+types,NA,resourceTypeGeneral,Dataset
+types,NA,resourceType,RNA-seq

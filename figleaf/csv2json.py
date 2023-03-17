@@ -60,9 +60,19 @@ records = data.to_dict(orient='records')
 #   ... etc.
 #   ]
 
+# resource type. resourceType is mandatory, free text. resourceTypeGeneral is also mandatory, but controlled vocabulary.
+rT = None
+rTG = None
+for record in records:
+    if record['Attr_key'] == 'resourceType':
+        rT = record['Attr_value']
+    if record['Attr_key'] == 'resourceTypeGeneral':
+        rTG = record['Attr_value']
+
+resourceTypeObj = models.Types(resourceType = rT, resourceTypeGeneral = rTG)
 
 
-# First, work on the creator field
+
 creator_dicts = {} # will look like this:
 # {
 #    1: {'name': 'Virginia Scarlett', 'nameType': 'Personal', 'nameIdentifiers': '0000-0002-4156-2849', 'nameIdentifierScheme': 'ORCID', 'schemeURI': 'https://orcid.org', 'Affiliations': ['University of California, Berkeley', 'HHMI Janelia Research Campus']}, 
@@ -84,49 +94,21 @@ for record in records:
             creator_dicts[creator_id][current_attr] = record['Attr_value']
 
 
-# Minor snag: Technically, the DataCite schema allows each creator/contributor to have multiple nameIdentifiers, but only one nameIdentifierScheme.
-# So a person could technically have e.g. two ORCID ids, and this would not violate the DataCite schema.
-# However, I think this is strange and should not be allowed! So I'm not allowing it. If the same creator provides two nameIdentifiers, one will be overwritten.
-# Confusingly, then, I am stuck with DataCite's use of the plural "nameIdentifiers" for objects that will only ever contain one piece of data.
+# N.B.: Currently, if the same creator provides two nameIdentifiers, e.g. two ORCIDs, one will be overwritten.
 
 # Create an instance of the Creator object for every creator.
 creators_final = {}
 for creator_id, creator_dict in creator_dicts.items(): 
     creators_final[creator_id] = create_creator(creator_dict)
 
-# creators_final looks like this:
- # {
- #   1: Creator(
- #        name='Virginia Scarlett', 
- #        nameType=<NameType.Personal: 'Personal'>, 
- #        givenName=None, 
- #        familyName=None, 
- #        nameIdentifiers=NameIdentifiers(__root__=[NameIdentifier(nameIdentifier='0000-0002-4156-2849', nameIdentifierScheme='ORCID', schemeURI=AnyUrl('https://orcid.org', scheme='https', host='orcid.org', tld='org', host_type='domain'))]), 
- #        affiliations=Affiliations(__root__=[Affiliation(affiliation='University of California, Berkeley'), Affiliation(affiliation='HHMI Janelia Research Campus')]), 
- #        lang=None), 
- #    2: Creator(
- #        name='William Shakespeare', 
- #        nameType=<NameType.Personal: 'Personal'>, 
- #        givenName=None, 
- #        familyName=None, 
- #        nameIdentifiers=None, 
- #        affiliations=None, 
- #        lang=None)
- #    }
 
 
-# Note:
-# titleType:Type of the related item title. Use this subproperty to add a subtitle, translation, or alternate title to the main title.
-# The primary title of the related item should not have a titleType subproperty.
-# The titleType subproperty is used when more than a single title is provided. Unless otherwise indicated by titleType, a title is considered to be the main title.
 title_objs = {}
 for record in records:
     if record['Attr'] == 'title':
         title_objs[record['Attr_key']] = models.Title(title = record['Attr_value'])
     if record['Attr'] == 'titleType':
         title_objs[record['Attr_key']] = models.Title(title = record['Attr_value'], titleType = models.TitleType(record['Attr_key']))
-
-
 
 # To do, at some point, maybe: ^^ add 'lang' to title(s), if provided
 
