@@ -114,8 +114,15 @@ for record in records:
 
 # To do, at some point, maybe: ^^ add 'lang' to title(s), if provided
 
+publisher = None
+for record in records:
+    if record['Attr'] == 'publisher':
+        publisher = record['Attr_value']
 
-
+pubYear = None
+for record in records:
+    if record['Attr'] == 'publicationYear':
+        pubYear = record['Attr_value']
 
 
 
