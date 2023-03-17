@@ -2,7 +2,7 @@ A nascent effort to develop some simple scripts for interacting with the figshar
 
 I am looking to https://github.com/dandi/dandi-schema for design inspiration. 
 
-Here is the plan (not yet sure that it will work):
+Here is the plan:
 
 <img
   src="plan.png"
