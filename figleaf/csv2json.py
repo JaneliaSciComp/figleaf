@@ -5,8 +5,6 @@ Plan is to extract metadata from a csv, turn those metadata into pydantic object
 for easy manipulation and thorough validation, and then ultimately convert them
 into a json object, following the latest DataCite schema.
 
-NOTE TO SELF: MAYBE WE SHOULD BE TRYING TO GET THESE DICTS INTO JSON OBJECTS
-FIRST, AND THEN CONVERT TO PYDANTIC CLASSES
 
 """
 
@@ -36,14 +34,11 @@ def create_creator(creator):
             new_creator.nameIdentifiers = models.NameIdentifiers( __root__ = [ 
                   models.NameIdentifier(nameIdentifier = creator['nameIdentifiers'], nameIdentifierScheme = creator['nameIdentifierScheme']) 
                 ] )
-    affiliations = []
     for k, v in creator.items():
-        if 'ffiliation' in k:
-            affiliations.append(v)
-    if affiliations:
-        affiliations = [ models.Affiliation(affiliation = a) for a in affiliations ]
-        affiliations = models.Affiliations(__root__ = affiliations)
-        new_creator.affiliations = affiliations
+        if k == 'Affiliations':
+            affiliations = [ models.Affiliation(affiliation = a) for a in creator['Affiliations'] ]
+            affiliations = models.Affiliations(__root__ = affiliations)
+            new_creator.affiliations = affiliations
     if 'lang' in creator:
         new_creator.lang = creator['lang'] # untested
     return(new_creator)
@@ -55,34 +50,43 @@ data = pd.read_csv('test_spreadsheet.csv', dtype={'id':'Int32'}) # stop pandas f
 records = data.to_dict(orient='records')
 # records looks like:
 # [
-#   {'Attr': 'creators', 'id': 1, 'Attr_key': 'name', 'Attr_value': 'Virginia Scarlett'}, 
-#   {'Attr': 'creators', 'id': 1, 'Attr_key': 'nameType', 'Attr_value': 'Personal'}, 
-#   {'Attr': 'creators', 'id': 1, 'Attr_key': 'nameIdentifiers', 'Attr_value': '0000-0002-4156-2849'},
+# {'Attr': 'creators', 'id': 1, 'Attr_key': 'name', 'Attr_value': 'Virginia Scarlett'}
+# {'Attr': 'creators', 'id': 1, 'Attr_key': 'nameType', 'Attr_value': 'Personal'}
+# {'Attr': 'creators', 'id': 1, 'Attr_key': 'nameIdentifiers', 'Attr_value': '0000-0002-4156-2849'}
+# {'Attr': 'creators', 'id': 1, 'Attr_key': 'nameIdentifierScheme', 'Attr_value': 'ORCID'}
+# {'Attr': 'creators', 'id': 1, 'Attr_key': 'schemeURI', 'Attr_value': 'https://orcid.org'}
+# {'Attr': 'creators', 'id': 1, 'Attr_key': 'Affiliations', 'Attr_value': 'University of California, Berkeley'}
+# {'Attr': 'creators', 'id': 1, 'Attr_key': 'Affiliations', 'Attr_value': 'HHMI Janelia Research Campus'}
 #   ... etc.
 #   ]
+
+
 
 # First, work on the creator field
 creator_dicts = {} # will look like this:
 # {
-#    1: {'name': 'Virginia Scarlett', 'nameType': 'Personal', 'nameIdentifiers': '0000-0002-4156-2849', 'nameIdentifierScheme': 'ORCID', 'schemeURI': 'https://orcid.org', 'Affiliation': 'University of California, Berkeley', 'Affiliation1': 'HHMI Janelia Research Campus'}, 
+#    1: {'name': 'Virginia Scarlett', 'nameType': 'Personal', 'nameIdentifiers': '0000-0002-4156-2849', 'nameIdentifierScheme': 'ORCID', 'schemeURI': 'https://orcid.org', 'Affiliations': ['University of California, Berkeley', 'HHMI Janelia Research Campus']}, 
 #    2: {'name': 'William Shakespeare', 'nameType': 'Personal'}
 # }
-counter = 1
+
 for record in records:
     if record['Attr'] == 'creators':
         current_attr = record['Attr_key']
         creator_id = record['id']
         if creator_id not in creator_dicts:
             creator_dicts[creator_id] = {}
-        if current_attr in creator_dicts[creator_id]: # This will be True if a creator has multiple affiliations. 
-            # In that case, 'Affiliation' may already be in the creator's dict.
-            current_attr = current_attr + str(counter) # Add an arbitrary number to the key name to make it a unique string. 
-            counter += 1
-        creator_dicts[creator_id][current_attr] = record['Attr_value']
+        if record['Attr_key'] == 'Affiliations':
+            if 'Affiliations' in creator_dicts[creator_id]:
+                creator_dicts[creator_id]['Affiliations'].append(record['Attr_value'])
+            else:
+                creator_dicts[creator_id]['Affiliations'] = [ record['Attr_value'] ]
+        else:
+            creator_dicts[creator_id][current_attr] = record['Attr_value']
+
 
 # Minor snag: Technically, the DataCite schema allows each creator/contributor to have multiple nameIdentifiers, but only one nameIdentifierScheme.
 # So a person could technically have e.g. two ORCID ids, and this would not violate the DataCite schema.
-# I think this is strange and should not be allowed! So I'm not allowing it. If the same creator provides two nameIdentifiers, one will be overwritten.
+# However, I think this is strange and should not be allowed! So I'm not allowing it. If the same creator provides two nameIdentifiers, one will be overwritten.
 # Confusingly, then, I am stuck with DataCite's use of the plural "nameIdentifiers" for objects that will only ever contain one piece of data.
 
 # Create an instance of the Creator object for every creator.
