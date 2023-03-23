@@ -10,39 +10,27 @@ into a json object, following the latest DataCite schema.
 
 import pandas as pd
 import pydantic
-#from typing import Any, Dict, Union
-from jsonschema import Draft7Validator # A typing.Protocol class for v. 7 of the JSON Schema spec. 
-#^Implements methods and subclasses for validating that the input JSON schema adheres to the v.7 spec.
 import models
+#from typing import Any, Dict, Union
+#from jsonschema import Draft7Validator # A typing.Protocol class for v. 7 of the JSON Schema spec. 
+#^Implements methods and subclasses for validating that the input JSON schema adheres to the v.7 spec.
 
-
-def create_creator(creator):
-    # ^creator is a dictionary containing all provided metadata for one creator
-    new_creator = models.Creator(name = creator['name'])
-    if 'nameType' in creator:
-        new_creator.nameType = models.NameType(creator['nameType'])
-    if 'givenName' in creator:
-        new_creator.givenName = creator['givenName']
-    if 'familyName' in creator:
-        new_creator.familyName = creator['familyName']
-    if 'nameIdentifiers' in creator:
-        if 'schemeURI' in creator: 
-            new_creator.nameIdentifiers = models.NameIdentifiers( __root__ = [ 
-                models.NameIdentifier(nameIdentifier = creator['nameIdentifiers'], nameIdentifierScheme = creator['nameIdentifierScheme'], schemeURI = creator['schemeURI']) 
+def create_creator(**kwargs):
+    # N.B.: This code will break if the same creator provides two nameIdentifiers, e.g. two ORCIDs. 
+    # This is such an unlikely scenario that I'm not adding code to accommodate it.
+    if 'nameIdentifiers' in kwargs:
+        if 'schemeURI' in kwargs: 
+            kwargs['nameIdentifiers'] = models.NameIdentifiers( __root__ = [ 
+                models.NameIdentifier(nameIdentifier = kwargs['nameIdentifiers'], nameIdentifierScheme = kwargs['nameIdentifierScheme'], schemeURI = kwargs['schemeURI']) 
                 ] )
         else:
-            new_creator.nameIdentifiers = models.NameIdentifiers( __root__ = [ 
-                  models.NameIdentifier(nameIdentifier = creator['nameIdentifiers'], nameIdentifierScheme = creator['nameIdentifierScheme']) 
+            kwargs['nameIdentifiers'] = models.NameIdentifiers( __root__ = [ 
+                  models.NameIdentifier(nameIdentifier = kwargs['nameIdentifiers'], nameIdentifierScheme = kwargs['nameIdentifierScheme']) 
                 ] )
-    for k, v in creator.items():
-        if k == 'Affiliations':
-            affiliations = [ models.Affiliation(affiliation = a) for a in creator['Affiliations'] ]
-            affiliations = models.Affiliations(__root__ = affiliations)
-            new_creator.affiliations = affiliations
-    if 'lang' in creator:
-        new_creator.lang = creator['lang'] # untested
-    return(new_creator)
-
+    if 'affiliations' in kwargs:
+            affiliations = [ models.Affiliation(affiliation = a) for a in kwargs['affiliations'] ]
+            kwargs['affiliations'] = models.Affiliations(__root__ = affiliations)
+    return(models.Creator(**kwargs))
 
 
 # read in the metadata
@@ -76,32 +64,23 @@ resource_type_obj = models.Types(resourceType = rT, resourceTypeGeneral = rTG)
 identifier_obj = models.Identifier(identifier = "0", identifierType = "DOI") 
 
 # Next, Creators.
-creator_dicts = {} # will look like this:
-# {
-#    1 : {'name': 'Virginia Scarlett', 'nameType': 'Personal', 'nameIdentifiers': '0000-0002-4156-2849', 'nameIdentifierScheme': 'ORCID', 'schemeURI': 'https://orcid.org', 'Affiliations': ['University of California, Berkeley', 'HHMI Janelia Research Campus']}, 
-#    2 : {'name': 'William Shakespeare', 'nameType': 'Personal'}
-# }
-for record in records:
-    if record['Attr'] == 'creators':
-        current_attr = record['Attr_key']
-        creator_id = record['id']
-        if creator_id not in creator_dicts:
-            creator_dicts[creator_id] = {}
-        if record['Attr_key'] == 'Affiliations':
-            if 'Affiliations' in creator_dicts[creator_id]:
-                creator_dicts[creator_id]['Affiliations'].append(record['Attr_value'])
-            else:
-                creator_dicts[creator_id]['Affiliations'] = [ record['Attr_value'] ]
+creator_records = [ d for d in records if d['Attr'] == 'creators' ]
+creator_order = sorted(set( d['id'] for d in creator_records ))
+creator_dicts = []
+for i in creator_order:
+    current_records = [ d for d in creator_records if d['id'] == i ]
+    creator_dict = {}
+    for d in current_records:
+        if d['Attr_key'] in creator_dict:
+            if not isinstance(d['Attr_key'], list):
+                creator_dict[d['Attr_key']] = [ creator_dict[d['Attr_key']] ]
+            creator_dict[d['Attr_key']].append(d['Attr_value'])
         else:
-            creator_dicts[creator_id][current_attr] = record['Attr_value']
+            creator_dict[d['Attr_key']] = d['Attr_value']
+    creator_dicts.append(creator_dict)
 
+creator_objs = [ create_creator(**d) for d in creator_dicts ]
 
-# N.B.: Currently, if the same creator provides two nameIdentifiers, e.g. two ORCIDs, one will be overwritten.
-
-# Create an instance of the Creator object for every creator.
-creators_final = {}
-for creator_id, creator_dict in creator_dicts.items(): 
-    creators_final[creator_id] = create_creator(creator_dict)
 
 # Next, title(s)
 title_objs = []
@@ -127,7 +106,7 @@ for record in records:
 my_item = models.Model(
     types = resource_type_obj,
     identifiers = identifier_obj,
-    creators = list(creator_dicts.values()),
+    creators = creator_objs,
     titles = title_objs,
     publisher = publisher,
     publicationYear = pubYear   
@@ -136,10 +115,8 @@ my_item = models.Model(
 # TODO: Traceback (most recent call last):
 #   File "<stdin>", line 1, in <module>
 #   File "pydantic/main.py", line 341, in pydantic.main.BaseModel.__init__
-# pydantic.error_wrappers.ValidationError: 2 validation errors for Model
+# pydantic.error_wrappers.ValidationError: 1 validation error for Model
 # identifiers
-#   value is not a valid list (type=type_error.list)
-# creators -> 0 -> nameIdentifiers -> __root__
 #   value is not a valid list (type=type_error.list)
 
 

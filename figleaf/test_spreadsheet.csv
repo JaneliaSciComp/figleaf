@@ -4,15 +4,13 @@ creators,1,nameType,Personal
 creators,1,nameIdentifiers,0000-0002-4156-2849
 creators,1,nameIdentifierScheme,ORCID
 creators,1,schemeURI,https://orcid.org
-creators,1,Affiliations,"University of California, Berkeley"
-creators,1,Affiliations,HHMI Janelia Research Campus
+creators,1,affiliations,"University of California, Berkeley"
+creators,1,affiliations,HHMI Janelia Research Campus
 creators,2,name,William Shakespeare
 creators,2,nameType,Personal
 title,NA,title,My cool dataset
 titleType,NA,Subtitle,An exploration of the meaning of life
-publisher,NA,publisher,Janelia Research Campus
-publicationYear,NA,publicationYear,2023
+publisher,NA,Janelia Research Campus,
+publicationYear,NA,2023,
 types,NA,resourceTypeGeneral,Dataset
-types,NA,resourceType,RNA-seq
-,,,
-,,,
+types,NA,resourceType,
