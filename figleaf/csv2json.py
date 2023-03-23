@@ -49,14 +49,8 @@ records = data.to_dict(orient='records')
 #   ]
 
 # First, resource type. resourceType is mandatory, free text. resourceTypeGeneral is also mandatory, but controlled vocabulary.
-rT = None
-rTG = None
-for record in records:
-    if record['Attr_key'] == 'resourceType':
-        rT = record['Attr_value']
-    if record['Attr_key'] == 'resourceTypeGeneral':
-        rTG = record['Attr_value']
-
+rT = [ d for d in records if d['Attr_key'] == 'resourceType' ][0]['Attr_value'] # There should be only one resourceType and one resourceTypeGeneral, so we grab the 0th element
+rTG = [ d for d in records if d['Attr_key'] == 'resourceTypeGeneral' ][0]['Attr_value']
 resource_type_obj = models.Types(resourceType = rT, resourceTypeGeneral = rTG)
 
 
