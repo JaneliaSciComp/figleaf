@@ -15,6 +15,15 @@ import models
 #from jsonschema import Draft7Validator # A typing.Protocol class for v. 7 of the JSON Schema spec. 
 #^Implements methods and subclasses for validating that the input JSON schema adheres to the v.7 spec.
 
+def filter_records(column, match):
+    """
+    Filter rows collected from the spreadsheet where a certain column matches a certain number or word (match). 
+    Return a list of dictionaries, or an empty list if no matches.
+    If we know there should be only match, e.g. title, we can extract the 0th element from the resulting list.
+    """
+    return( [ d for d in records if d[column] == match ] )
+
+
 def create_creator(**kwargs):
     # N.B.: This code will break if the same creator provides two nameIdentifiers, e.g. two ORCIDs. 
     # This is such an unlikely scenario that I'm not adding code to accommodate it.
@@ -28,6 +37,7 @@ def create_creator(**kwargs):
                   models.NameIdentifier(nameIdentifier = kwargs['nameIdentifiers'], nameIdentifierScheme = kwargs['nameIdentifierScheme']) 
                 ] )
     if 'affiliations' in kwargs:
+            kwargs['affiliations'] = list(kwargs['affiliations']) if not isinstance(kwargs['affiliations'], list) else kwargs['affiliations']
             affiliations = [ models.Affiliation(affiliation = a) for a in kwargs['affiliations'] ]
             kwargs['affiliations'] = models.Affiliations(__root__ = affiliations)
     return(models.Creator(**kwargs))
@@ -36,6 +46,10 @@ def create_creator(**kwargs):
 # read in the metadata
 data = pd.read_csv('test_spreadsheet.csv', dtype={'id':'Int32'}) # stop pandas from automatically converting int to float
 records = data.to_dict(orient='records')
+for d in records: # stupid pandas doesn't let me change NA to something else when I read in the data
+    for k, v in d.items():
+        if pd.isnull(v):
+            d[k] = None
 # records looks like:
 # [
 # {'Attr': 'creators', 'id': 1, 'Attr_key': 'name', 'Attr_value': 'Virginia Scarlett'}
@@ -49,8 +63,8 @@ records = data.to_dict(orient='records')
 #   ]
 
 # First, resource type. resourceType is mandatory, free text. resourceTypeGeneral is also mandatory, but controlled vocabulary.
-rT = [ d for d in records if d['Attr_key'] == 'resourceType' ][0]['Attr_value'] # There should be only one resourceType and one resourceTypeGeneral, so we grab the 0th element
-rTG = [ d for d in records if d['Attr_key'] == 'resourceTypeGeneral' ][0]['Attr_value']
+rT = filter_records('Attr_key', 'resourceType')[0]['Attr_value']
+rTG = filter_records('Attr_key', 'resourceTypeGeneral')[0]['Attr_value']
 resource_type_obj = models.Types(resourceType = rT, resourceTypeGeneral = rTG)
 
 
@@ -58,15 +72,15 @@ resource_type_obj = models.Types(resourceType = rT, resourceTypeGeneral = rTG)
 identifier_obj = models.Identifier(identifier = "0", identifierType = "DOI") 
 
 # Next, Creators.
-creator_records = [ d for d in records if d['Attr'] == 'creators' ]
+creator_records = filter_records('Attr', 'creators')
 creator_order = sorted(set( d['id'] for d in creator_records ))
 creator_dicts = []
 for i in creator_order:
-    current_records = [ d for d in creator_records if d['id'] == i ]
+    current_records = filter_records('id', i)
     creator_dict = {}
     for d in current_records:
-        if d['Attr_key'] in creator_dict:
-            if not isinstance(d['Attr_key'], list):
+        if d['Attr_key'] in creator_dict: # e.g. affiliations
+            if not isinstance(creator_dict[d['Attr_key']], list):
                 creator_dict[d['Attr_key']] = [ creator_dict[d['Attr_key']] ]
             creator_dict[d['Attr_key']].append(d['Attr_value'])
         else:
@@ -77,25 +91,14 @@ creator_objs = [ create_creator(**d) for d in creator_dicts ]
 
 
 # Next, title(s)
-title_objs = []
-for record in records:
-    if record['Attr'] == 'title':
-        title_objs.append( models.Title(title = record['Attr_value']) )
-    if record['Attr'] == 'titleType':
-        title_objs.append( models.Title(title = record['Attr_value'], titleType = models.TitleType(record['Attr_key'])) )
+# There should be one and only one title
+title_objs = [ models.Title(title = filter_records('Attr', 'title')[0]['Attr_value']) ]
+for d in filter_records('Attr', 'titleType'):
+    title_objs.append( models.Title(title = d['Attr_value'], titleType = models.TitleType(d['Attr_key'])) )
 
-# To do, at some point, maybe: ^^ add 'lang' to title(s), if provided
 
-publisher = None
-for record in records:
-    if record['Attr'] == 'publisher':
-        publisher = record['Attr_value']
-
-pubYear = None
-for record in records:
-    if record['Attr'] == 'publicationYear':
-        pubYear = record['Attr_value']
-
+publisher = filter_records('Attr', 'publisher')[0]['Attr_value']
+pubYear = filter_records('Attr', 'publicationYear')[0]['Attr_value']
 
 my_item = models.Model(
     types = resource_type_obj,
