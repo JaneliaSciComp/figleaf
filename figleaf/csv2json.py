@@ -1,19 +1,24 @@
 """
 This script is not finished.
 Run AFTER create_models.py.
-Plan is to extract metadata from a csv, turn those metadata into pydantic objects
-for easy manipulation and thorough validation, and then ultimately convert them
-into a json object, following the latest DataCite schema.
+This script extracts metadata from a csv, and creates a pydantic object with
+those metadata as attributes. For now, it requires that the pydantic object
+adhere to the Datacite 4.3 schema. In the future, I will edit this workflow 
+to start with a more permissive schema for minting DOIs. All that's needed to 
+create a DOI is a prefix, though I would like to be able to inclue a lot of 
+optional metadata. See this webpage for more info on creating DOIs: 
+https://support.datacite.org/docs/api-create-dois
 
+I am just using the official schema for now for practice/proof of concept.
 
+TODO: Allow user to specify name of output file on command line (use argparse?)
+TODO, maybe: make this script more modular by turning most of these tasks
+into functions that take a list of records as input.
 """
 
 import pandas as pd
 import pydantic
 import models
-#from typing import Any, Dict, Union
-#from jsonschema import Draft7Validator # A typing.Protocol class for v. 7 of the JSON Schema spec. 
-#^Implements methods and subclasses for validating that the input JSON schema adheres to the v.7 spec.
 
 def filter_records(column, match):
     """
@@ -110,6 +115,23 @@ my_item = models.Model(
     publisher = publisher,
     publicationYear = pubYear   
     )
+
+# Now we have a handy python object. We can access attributes like my_item.titles, and add attributes fairly easily. 
+# Pydantic has tons of ways to manipulate these objects, e.g. enforce a certain datetime encoding, export to dict e.g. my_item.dict(), and other useful stuff
+
+#For now, let's just export directly to json and write to a file.
+
+with open('researcher_metadata.json', 'w') as outF:
+    outF.write(my_item.json(indent=4))
+
+
+
+
+
+
+
+
+
 
 
 
