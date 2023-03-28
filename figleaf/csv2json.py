@@ -68,8 +68,10 @@ rTG = filter_records('Attr_key', 'resourceTypeGeneral')[0]['Attr_value']
 resource_type_obj = models.Types(resourceType = rT, resourceTypeGeneral = rTG)
 
 
-# Next, identifier. This field is mandatory, but we can (and must) fill it with nonsense, since we don't have a DOI yet.
-identifier_obj = models.Identifier(identifier = "0", identifierType = "DOI") 
+# Next, identifiers. This field is mandatory, and must be a list.
+# TODO: build out functionality to include RelatedIdentifiers
+# The regular identifier object refers to the DOI. We can (and must) fill it with nonsense, since we don't have a DOI yet.
+identifiers = [ models.Identifier(identifier = "0", identifierType = "DOI") ]
 
 # Next, Creators.
 creator_records = filter_records('Attr', 'creators')
@@ -97,24 +99,17 @@ for d in filter_records('Attr', 'titleType'):
     title_objs.append( models.Title(title = d['Attr_value'], titleType = models.TitleType(d['Attr_key'])) )
 
 
-publisher = filter_records('Attr', 'publisher')[0]['Attr_value']
-pubYear = filter_records('Attr', 'publicationYear')[0]['Attr_value']
+publisher = filter_records('Attr', 'publisher')[0]['Attr_key']
+pubYear = filter_records('Attr', 'publicationYear')[0]['Attr_key']
 
 my_item = models.Model(
     types = resource_type_obj,
-    identifiers = identifier_obj,
+    identifiers = identifiers,
     creators = creator_objs,
     titles = title_objs,
     publisher = publisher,
     publicationYear = pubYear   
     )
-
-# TODO: Traceback (most recent call last):
-#   File "<stdin>", line 1, in <module>
-#   File "pydantic/main.py", line 341, in pydantic.main.BaseModel.__init__
-# pydantic.error_wrappers.ValidationError: 1 validation error for Model
-# identifiers
-#   value is not a valid list (type=type_error.list)
 
 
 
