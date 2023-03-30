@@ -2,7 +2,7 @@ A nascent effort to develop some simple scripts for interacting with the figshar
 
 I am looking to https://github.com/dandi/dandi-schema for design inspiration. 
 
-Here is the plan:
+My first goal is a workflow for programmatic creation of figshare articles. Here is the plan:
 
 <img
   src="plan.png"
