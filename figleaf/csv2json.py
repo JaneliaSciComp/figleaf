@@ -1,6 +1,6 @@
 """
 This script is not finished.
-Run AFTER create_models.py.
+Run AFTER creating models.
 This script extracts metadata from a csv, and creates a pydantic object with
 those metadata as attributes. For now, it requires that the pydantic object
 adhere to the Datacite 4.3 schema. In the future, I will edit this workflow 
@@ -49,7 +49,7 @@ def create_creator(**kwargs):
 
 
 # read in the metadata
-data = pd.read_csv('test_spreadsheet.csv', dtype={'id':'Int32'}) # stop pandas from automatically converting int to float
+data = pd.read_csv('researcher_metadata.csv', dtype={'id':'Int32'}) # stop pandas from automatically converting int to float
 records = data.to_dict(orient='records')
 for d in records: # stupid pandas doesn't let me change NA to something else when I read in the data
     for k, v in d.items():
