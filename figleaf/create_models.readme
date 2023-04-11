@@ -10,9 +10,7 @@ datamodel-codegen --url https://api.figshare.com/v2/articles/22154810 --force-op
 # Create models from a figshare article (from file)
 datamodel-codegen --input example_article.json --force-optional --input-file-type json --output figshare_models.py
 
-#From within python, create a figshare JSON schema like so:
+#From within python, you can (but don't need to) create a figshare JSON schema like so:
 import json
 import figshare_models
-open('figshare_optional.jsonschema', 'w').write(json.dumps(figshare_models.Model.schema(), indent=2))
-
-#Note to self: maybe you can edit pydantic classes within python to make certain fields mandatory?
+open('figshare_optional.jsonschema', 'w').write(json.dumps(figshare_models.Model.schema(), indent=4))
