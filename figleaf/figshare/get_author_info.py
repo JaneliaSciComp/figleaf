@@ -24,6 +24,7 @@ headers = {'Authorization': 'token {}'.format(args.token)}
 
 response = requests.post(url, headers=headers)
 response.raise_for_status()
+#bug testing:
 #response.status_code
 #response.reason
 data = response.json() # a list of dicts

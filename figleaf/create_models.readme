@@ -4,13 +4,18 @@ datamodel-codegen --url https://raw.githubusercontent.com/datacite/schema/732cc7
 # Create models from unofficial datacite schema (from file)
 datamodel-codegen --input datacite_4.3_schema.json --input-file-type jsonschema --output datacite_models.py
 
-# Create models from a figshare article (GET request)
-datamodel-codegen --url https://api.figshare.com/v2/articles/22154810 --force-optional --input-file-type json --output figshare_models.py
+# Create models from a random figshare article (GET request)
+datamodel-codegen --url https://api.figshare.com/v2/articles/22154810 --input-file-type json --force-optional --output figshare_example_models.py
 
-# Create models from a figshare article (from file)
-datamodel-codegen --input example_article.json --force-optional --input-file-type json --output figshare_models.py
+# Create models from a figshare json object (from file)
+# This object is from https://docs.figshare.com/#private_article_create
+datamodel-codegen --input example_from_docs.json --input-file-type json --force-optional --output figshare_models.py
+
+# Note: when creating from an example object, not a schema, you may with to add the --force-optional flag
+# to make all fields optional. Otherwise, all fields that are filled out in the json object will be mandatory
+# in the resulting models/schema.
 
 #From within python, you can (but don't need to) create a figshare JSON schema like so:
 import json
 import figshare_models
-open('figshare_optional.jsonschema', 'w').write(json.dumps(figshare_models.Model.schema(), indent=4))
+open('figshare.jsonschema', 'w').write(json.dumps(figshare_models.Model.schema(), indent=4))

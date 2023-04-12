@@ -1,0 +1,63 @@
+{
+  "title": "Test article title",
+  "description": "Test description of article",
+  "is_metadata_record": true,
+  "metadata_reason": "hosted somewhere else",
+  "tags": [
+    "tag1",
+    "tag2"
+  ],
+  "keywords": [
+    "tag1",
+    "tag2"
+  ],
+  "references": [
+    "http://figshare.com",
+    "http://api.figshare.com"
+  ],
+  "categories": [
+    1,
+    10,
+    11
+  ],
+  "categories_by_source_id": [
+    "300204",
+    "400207"
+  ],
+  "authors": [
+    {
+      "name": "John Doe"
+    },
+    {
+      "id": 1000008
+    }
+  ],
+  "custom_fields": {
+    "defined_key": "value for it"
+  },
+  "custom_fields_list": [
+    {
+      "name": "key",
+      "value": "value"
+    }
+  ],
+  "defined_type": "media",
+  "funding": "",
+  "funding_list": [
+    {
+      "id": 0,
+      "title": "string"
+    }
+  ],
+  "license": 1,
+  "doi": "",
+  "handle": "",
+  "resource_doi": "",
+  "resource_title": "",
+  "timeline": {
+    "firstOnline": "2015-12-31",
+    "publisherPublication": "2015-12-31",
+    "publisherAcceptance": "2015-12-31"
+  },
+  "group_id": 0
+}

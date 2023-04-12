@@ -1,0 +1,188 @@
+{
+    "title": "Model",
+    "type": "object",
+    "properties": {
+        "title": {
+            "title": "Title",
+            "type": "string"
+        },
+        "description": {
+            "title": "Description",
+            "type": "string"
+        },
+        "is_metadata_record": {
+            "title": "Is Metadata Record",
+            "type": "boolean"
+        },
+        "metadata_reason": {
+            "title": "Metadata Reason",
+            "type": "string"
+        },
+        "tags": {
+            "title": "Tags",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "keywords": {
+            "title": "Keywords",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "references": {
+            "title": "References",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "categories": {
+            "title": "Categories",
+            "type": "array",
+            "items": {
+                "type": "integer"
+            }
+        },
+        "categories_by_source_id": {
+            "title": "Categories By Source Id",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "authors": {
+            "title": "Authors",
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/Author"
+            }
+        },
+        "custom_fields": {
+            "$ref": "#/definitions/CustomFields"
+        },
+        "custom_fields_list": {
+            "title": "Custom Fields List",
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/CustomFieldsListItem"
+            }
+        },
+        "defined_type": {
+            "title": "Defined Type",
+            "type": "string"
+        },
+        "funding": {
+            "title": "Funding",
+            "type": "string"
+        },
+        "funding_list": {
+            "title": "Funding List",
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/FundingListItem"
+            }
+        },
+        "license": {
+            "title": "License",
+            "type": "integer"
+        },
+        "doi": {
+            "title": "Doi",
+            "type": "string"
+        },
+        "handle": {
+            "title": "Handle",
+            "type": "string"
+        },
+        "resource_doi": {
+            "title": "Resource Doi",
+            "type": "string"
+        },
+        "resource_title": {
+            "title": "Resource Title",
+            "type": "string"
+        },
+        "timeline": {
+            "$ref": "#/definitions/Timeline"
+        },
+        "group_id": {
+            "title": "Group Id",
+            "type": "integer"
+        }
+    },
+    "definitions": {
+        "Author": {
+            "title": "Author",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "title": "Name",
+                    "type": "string"
+                },
+                "id": {
+                    "title": "Id",
+                    "type": "integer"
+                }
+            }
+        },
+        "CustomFields": {
+            "title": "CustomFields",
+            "type": "object",
+            "properties": {
+                "defined_key": {
+                    "title": "Defined Key",
+                    "type": "string"
+                }
+            }
+        },
+        "CustomFieldsListItem": {
+            "title": "CustomFieldsListItem",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "title": "Name",
+                    "type": "string"
+                },
+                "value": {
+                    "title": "Value",
+                    "type": "string"
+                }
+            }
+        },
+        "FundingListItem": {
+            "title": "FundingListItem",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "Id",
+                    "type": "integer"
+                },
+                "title": {
+                    "title": "Title",
+                    "type": "string"
+                }
+            }
+        },
+        "Timeline": {
+            "title": "Timeline",
+            "type": "object",
+            "properties": {
+                "firstOnline": {
+                    "title": "Firstonline",
+                    "type": "string"
+                },
+                "publisherPublication": {
+                    "title": "Publisherpublication",
+                    "type": "string"
+                },
+                "publisherAcceptance": {
+                    "title": "Publisheracceptance",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
