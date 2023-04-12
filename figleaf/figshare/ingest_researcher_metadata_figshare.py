@@ -1,9 +1,9 @@
 """
-This script is untested.
-Run AFTER creating figshare_models.
-This script extracts metadata from a csv, and creates a pydantic object with
-those metadata as attributes. For now, it requires that the pydantic object
-adhere to the rather fragile schema grabbed from this url: https://docs.figshare.com/#private_article. 
+A script to produce a JSON file with all the metadata you need to create a new private article.
+Run after creating figshare_models.py (see create_models.readme).
+This script takes researcher_metadata.csv as input.
+Extracts metadata from the csv, and creates a pydantic object with
+those metadata as attributes. 
 """
 
 from pandas import read_csv, isnull
