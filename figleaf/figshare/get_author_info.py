@@ -1,3 +1,9 @@
+"""
+A script to grab author information from figshare records.
+Run like so:
+python get_author_info.py -a Virginia Scarlett, Ana Van Gulick, -t 12345678910abcdefghijklm
+"""
+
 import requests
 import argparse
 
