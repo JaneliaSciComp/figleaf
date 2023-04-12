@@ -1,11 +1,14 @@
 ﻿Attr,id,Attr_key,Attr_value
 authors,1,name,Virginia Scarlett
 authors,1,id,14526911
-authors,2,url_name,William _Shakespeare
-authors,2,name,William Shakespeare
+authors,2,url_name,Ana_Van_Gulick
+authors,2,id,9314359
+authors,2,name,Ana Van Gulick
 title,NA,title,My cool dataset
 description,NA,description,"While counting numbers is quite common, little is known about the true meaning of numbers. In this study, a series of random numbers was generated. Surprisingly, we found no evidence that numbers alone are inherently meaningful. This study suggests that numbers are not sufficient to explain their own meaning."
 keywords,1,keywords,Single neuron reconstruction
-categories,1,categories_by_source_id,24748
-categories,2,categories_by_source_id,24169
+categories,1,categories,24748
+categories,1,categories_by_source_id,320999
+categories,2,categories,24169
+categories,2,categories_by_source_id,310112
 defined_type,NA,defined_type,dataset

@@ -83,7 +83,7 @@ creator_records = filter_records('Attr', 'creators')
 creator_order = sorted(set( d['id'] for d in creator_records ))
 creator_dicts = []
 for i in creator_order:
-    current_records = filter_records('id', i)
+    current_records = filter_records('id', i) # TODO: BUG. THIS FILTERS ALL RECORDS WITH id == i, not just creator records
     creator_dict = {}
     for d in current_records:
         if d['Attr_key'] in creator_dict: # e.g. affiliations
