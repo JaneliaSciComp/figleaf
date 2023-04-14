@@ -93,8 +93,7 @@ my_private_article = figshare_models.Model(
     categories = cats,
     categories_by_source_id = cat_src,
     authors = auth_objs,
-    defined_type = dt,
-    group_id = 11380 
+    defined_type = dt
     )
 
 # Now we have a handy python object. We can access attributes like my_private_article.title, and add attributes fairly easily. 
@@ -111,7 +110,8 @@ attrs_to_remove = [
     'handle',
     'resource_doi',
     'resource_title',
-    'timeline'
+    'timeline',
+    'group_id'
 ]
 
 for e in attrs_to_remove:

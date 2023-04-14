@@ -18,18 +18,28 @@ parser.add_argument('-c',
                     type=str,
                     nargs='+'
                     )
+parser.add_argument('-s', 
+                    '--stage', 
+                    help = 'If -s is included, script will grab info from the stage environment, not the production environment.',
+                    action='store_true' # The store_true option automatically creates a default value of False.
+                    )
 args = parser.parse_args()
 
 my_categories = [e.strip() for e in " ".join(args.categories).split(',')]
 #print(my_categories)
 url = 'https://api.figshare.com/v2/categories'
+if args.stage:
+    url = 'https://api.figsh.com/v2/categories'
 
-response = requests.get(url)#
+# Get data for all categories
+response = requests.get(url)
 response.raise_for_status()
 #bug testing:
 #response.status_code
 #response.reason
 data = response.json() # a list of dicts
+
+# Filter for categories of interest
 final = []
 for category in data:
     if category['title'] in my_categories:

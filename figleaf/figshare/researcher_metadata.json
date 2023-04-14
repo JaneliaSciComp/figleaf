@@ -11,23 +11,22 @@
     ],
     "references": [],
     "categories": [
-        24748,
-        24169
+        25718,
+        26104
     ],
     "categories_by_source_id": [
-        "320999",
-        "310112"
+        "310112",
+        "320999"
     ],
     "authors": [
         {
             "name": "Virginia Scarlett",
-            "id": 14526911
+            "id": 2933718
         },
         {
             "name": "Ana Van Gulick",
-            "id": 9314359
+            "id": null
         }
     ],
-    "defined_type": "dataset",
-    "group_id": 11380
+    "defined_type": "dataset"
 }
