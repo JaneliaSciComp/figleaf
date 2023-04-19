@@ -36,7 +36,7 @@ def get_dicts_from_records(myrecords):
 # read in the metadata
 data = read_csv('researcher_metadata_figshare.csv', dtype={'id':'Int32'}) # stop pandas from automatically converting int to float
 records = data.to_dict(orient='records')
-for d in records: # stupid pandas doesn't let me change NA to something else when I read in the data
+for d in records: # change NA to None when I read in the data
     for k, v in d.items():
         if isnull(v):
             d[k] = None
@@ -51,22 +51,23 @@ for d in records: # stupid pandas doesn't let me change NA to something else whe
 #     ...
 # ]
 
-# First, title.
+# First, get the title.
 title = filter_records('Attr', 'title')[0]['Attr_value']
-# Next, description.
+# Next, get the description.
 desc = filter_records('Attr', 'description')[0]['Attr_value']
-# Next, keywords.
+# Next, get the keywords.
 keyw_records = filter_records('Attr', 'keywords')
 keyw = [ record['Attr_value'] for record in keyw_records ]
-# Next, categories.
+# Next, get the categories.
 cat_records = filter_records('Attr', 'categories')
 cat_dicts = get_dicts_from_records(cat_records) # looks like: [{'categories': '24748', 'categories_by_source_id': '320999'}, {'categories': '24169', 'categories_by_source_id': '310112'}]
 cats = [ int(d['categories']) for d in cat_dicts ]
 cat_src = [ str(d['categories_by_source_id']) for d in cat_dicts ]
 
 
-# Next, authors.
-# From the create private article section of figshare API docs:
+# Next, get the authors and create an instance of Authors. 
+# Authors is a figshare_models class, which is itself a list of figshare_models Author objects.
+# Some constraints from the create private article section of figshare API docs:
 # "Can contain the following fields: id, name, first_name, last_name, email, orcid_id. 
 # If an id is supplied, it will take priority and everything else will be ignored. 
 # No more than 10 authors. For adding more authors use the specific authors endpoint."
@@ -79,9 +80,10 @@ for d in auth_dicts:
 
 auth_objs = [ figshare_models.Author(**d) for d in auth_dicts ]
 
-# Next, defined_type.
+# Next, get the defined_type.
 dt = filter_records('Attr', 'defined_type')[0]['Attr_value']
 
+# Finally, create an instance of the Model class, which represents the article we want to create.
 my_private_article = figshare_models.Model(
     title = title,
     description = desc,
@@ -113,11 +115,9 @@ attrs_to_remove = [
     'timeline',
     'group_id'
 ]
-
 for e in attrs_to_remove:
     exec(f'del my_private_article.{e}')
 
-# let's export to json and write to a file.
+# export researcher metadata to json and write to a file
 with open('researcher_metadata.json', 'w') as outF:
     outF.write(my_private_article.json(indent=4))
-
