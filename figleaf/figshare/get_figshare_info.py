@@ -69,7 +69,7 @@ parser.add_argument('-s',
 parser.add_argument('-t', 
                     '--token', 
                     required = False, 
-                    help = 'Personal token, most easily obtained through the figshare website. Required only for authors.'
+                    help = 'Personal token, most easily obtained through the figshare website. Required to get author info.'
                     )
 
 if __name__ == "__main__":
@@ -81,5 +81,3 @@ if __name__ == "__main__":
     print(
         json.dumps( filter_response(data, args.field), indent = 4 )
     )
-    #for e in filter_response(data, args.field):
-        #print( e.json(indent=4) )
