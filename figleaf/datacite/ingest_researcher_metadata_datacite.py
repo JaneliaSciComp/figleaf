@@ -11,9 +11,26 @@ https://support.datacite.org/docs/api-create-dois
 
 I am just using the official schema for now for practice/proof of concept.
 
-TODO: Allow user to specify name of output file on command line (use argparse?)
-TODO, maybe: make this script more modular by turning most of these tasks
-into functions that take a list of records as input.
+TODO: Modify my_item so that it creates a JSON body for POSTing a new DOI, e.g.:
+{
+     "data": {
+          "type": "dois",
+          "attributes": {
+               "creators": [
+                    {
+                         "name": "Virginia Scarlett"
+                    }
+               ],
+               "titles": [
+                    {
+                         "title": "My dataset"
+                    }
+               ],
+               "publisher": "Janelia Research Campus",
+               "publicationYear": 2023
+          }
+     }
+}
 """
 
 import pandas as pd
@@ -123,15 +140,4 @@ my_item = models.Model(
 
 with open('researcher_metadata.json', 'w') as outF:
     outF.write(my_item.json(indent=4))
-
-
-
-
-
-
-
-
-
-
-
 
