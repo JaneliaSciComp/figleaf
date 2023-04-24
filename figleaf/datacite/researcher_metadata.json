@@ -1,73 +1,72 @@
 {
-    "types": {
-        "resourceType": "Genomics",
-        "resourceTypeGeneral": "Dataset"
-    },
-    "identifiers": [
-        {
-            "identifier": "0",
-            "identifierType": "DOI"
-        }
-    ],
-    "creators": [
-        {
-            "name": "Virginia Scarlett",
-            "nameType": "Personal",
-            "givenName": null,
-            "familyName": null,
-            "nameIdentifiers": [
+    "data": {
+        "type": "dois",
+        "attributes": {
+            "types": {
+                "resourceType": "Genomics",
+                "resourceTypeGeneral": "Dataset"
+            },
+            "creators": [
                 {
-                    "nameIdentifier": "0000-0002-4156-2849",
-                    "nameIdentifierScheme": "ORCID",
-                    "schemeURI": "https://orcid.org"
-                }
-            ],
-            "affiliations": [
-                {
-                    "affiliation": "University of California, Berkeley"
+                    "name": "Virginia Scarlett",
+                    "nameType": "Personal",
+                    "givenName": null,
+                    "familyName": null,
+                    "nameIdentifiers": [
+                        {
+                            "nameIdentifier": "0000-0002-4156-2849",
+                            "nameIdentifierScheme": "ORCID",
+                            "schemeURI": "https://orcid.org"
+                        }
+                    ],
+                    "affiliations": [
+                        {
+                            "affiliation": "University of California, Berkeley"
+                        },
+                        {
+                            "affiliation": "HHMI Janelia Research Campus"
+                        }
+                    ],
+                    "lang": null
                 },
                 {
-                    "affiliation": "HHMI Janelia Research Campus"
+                    "name": "William Shakespeare",
+                    "nameType": "Personal",
+                    "givenName": null,
+                    "familyName": null,
+                    "nameIdentifiers": null,
+                    "affiliations": null,
+                    "lang": null
                 }
             ],
-            "lang": null
-        },
-        {
-            "name": "William Shakespeare",
-            "nameType": "Personal",
-            "givenName": null,
-            "familyName": null,
-            "nameIdentifiers": null,
-            "affiliations": null,
-            "lang": null
+            "titles": [
+                {
+                    "title": "My cool dataset",
+                    "titleType": null,
+                    "lang": null
+                },
+                {
+                    "title": "An exploration of the meaning of life",
+                    "titleType": "Subtitle",
+                    "lang": null
+                }
+            ],
+            "publisher": "Janelia Research Campus",
+            "publicationYear": "2023",
+            "subjects": null,
+            "contributors": null,
+            "dates": null,
+            "language": null,
+            "alternateIdentifiers": null,
+            "relatedIdentifiers": null,
+            "sizes": null,
+            "formats": null,
+            "version": null,
+            "rightsList": null,
+            "descriptions": null,
+            "geoLocations": null,
+            "fundingReferences": null,
+            "schemaVersion": "http://datacite.org/schema/kernel-4"
         }
-    ],
-    "titles": [
-        {
-            "title": "My cool dataset",
-            "titleType": null,
-            "lang": null
-        },
-        {
-            "title": "An exploration of the meaning of life",
-            "titleType": "Subtitle",
-            "lang": null
-        }
-    ],
-    "publisher": "Janelia Research Campus",
-    "publicationYear": "2023",
-    "subjects": null,
-    "contributors": null,
-    "dates": null,
-    "language": null,
-    "alternateIdentifiers": null,
-    "relatedIdentifiers": null,
-    "sizes": null,
-    "formats": null,
-    "version": null,
-    "rightsList": null,
-    "descriptions": null,
-    "geoLocations": null,
-    "fundingReferences": null,
-    "schemaVersion": "http://datacite.org/schema/kernel-4"
+    }
 }
