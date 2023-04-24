@@ -127,6 +127,8 @@ my_data = DataObj(type = 'dois', attributes = my_item)
 my_req = RequestBody(data = my_data)
 exclude_keys = { 'data': { 'attributes': {'identifiers': True} } }
 
+#TODO: Need to add prefix to my_item. Our prefix is 10.80615
+
 with open('researcher_metadata.json', 'w') as outF:
     outF.write(my_req.json(exclude=exclude_keys, indent=4))
 
