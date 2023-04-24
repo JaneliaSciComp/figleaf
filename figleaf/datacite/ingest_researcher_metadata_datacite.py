@@ -1,36 +1,12 @@
 """
-This script is not finished.
-Run AFTER creating models.
 This script extracts metadata from a csv, and creates a pydantic object with
-those metadata as attributes. For now, it requires that the pydantic object
-adhere to the Datacite 4.3 schema. In the future, I will edit this workflow 
-to start with a more permissive schema for minting DOIs. All that's needed to 
-create a DOI is a prefix, though I would like to be able to inclue a lot of 
-optional metadata. See this webpage for more info on creating DOIs: 
+those metadata as attributes. 
+There are two phases here: first, we create the object that contains all the
+researcher's metadata. Then, we nest that object inside a couple more objects
+so that our JSON body matches the body we need to POST a request for a new DOI.
+
+See this webpage for more info on creating DOIs: 
 https://support.datacite.org/docs/api-create-dois
-
-I am just using the official schema for now for practice/proof of concept.
-
-TODO: Modify my_item so that it creates a JSON body for POSTing a new DOI, e.g.:
-{
-     "data": {
-          "type": "dois",
-          "attributes": {
-               "creators": [
-                    {
-                         "name": "Virginia Scarlett"
-                    }
-               ],
-               "titles": [
-                    {
-                         "title": "My dataset"
-                    }
-               ],
-               "publisher": "Janelia Research Campus",
-               "publicationYear": 2023
-          }
-     }
-}
 """
 
 from pandas import read_csv, isnull
