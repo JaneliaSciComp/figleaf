@@ -37,6 +37,15 @@ from pandas import read_csv, isnull
 #import pydantic
 import datacite_models as models
 
+
+class DataObj(models.BaseModel):
+    type: str
+    attributes: models.Model
+
+class RequestBody(models.BaseModel):
+    data: DataObj
+
+
 def filter_records(column, match):
     """
     Filter rows collected from the spreadsheet where a certain column matches a certain number or word (match). 
@@ -44,7 +53,6 @@ def filter_records(column, match):
     If we know there should be only match, e.g. title, we can extract the 0th element from the resulting list.
     """
     return( [ d for d in records if d[column] == match ] )
-
 
 def create_creator(**kwargs):
     # N.B.: This code will break if the same creator provides two nameIdentifiers, e.g. two ORCIDs. 
@@ -133,11 +141,16 @@ my_item = models.Model(
     publicationYear = pubYear   
     )
 
-# Now we have a handy python object. We can access attributes like my_item.titles, and add attributes fairly easily. 
-# Pydantic has tons of ways to manipulate these objects, e.g. enforce a certain datetime encoding, export to dict e.g. my_item.dict(), and other useful stuff
-
-#For now, let's just export directly to json and write to a file.
+# Now we have a handy python object. We can access attributes (e.g. my_item.titles) and add attributes fairly easily. 
+# Pydantic has a lot of handy ways to manipulate these objects.
+# Here, we want to remove the 'identifiers' attribute from the model, because 
+# we don't have a DOI yet (we are trying to create one). 
+# There's probably a more elegant solution than creating a dummy DOI and then excluding it, but this will suffice for now.
+# See https://docs.pydantic.dev/usage/exporting_models/
+my_data = DataObj(type = 'dois', attributes = my_item)
+my_req = RequestBody(data = my_data)
+exclude_keys = { 'data': { 'attributes': {'identifiers': True} } }
 
 with open('researcher_metadata.json', 'w') as outF:
-    outF.write(my_item.json(indent=4))
+    outF.write(my_req.json(exclude=exclude_keys, indent=4))
 
