@@ -33,9 +33,9 @@ TODO: Modify my_item so that it creates a JSON body for POSTing a new DOI, e.g.:
 }
 """
 
-import pandas as pd
-import pydantic
-import models
+from pandas import read_csv, isnull
+#import pydantic
+import datacite_models as models
 
 def filter_records(column, match):
     """
@@ -66,11 +66,11 @@ def create_creator(**kwargs):
 
 
 # read in the metadata
-data = pd.read_csv('researcher_metadata.csv', dtype={'id':'Int32'}) # stop pandas from automatically converting int to float
+data = read_csv('researcher_metadata.csv', dtype={'id':'Int32'}) # stop pandas from automatically converting int to float
 records = data.to_dict(orient='records')
 for d in records: # stupid pandas doesn't let me change NA to something else when I read in the data
     for k, v in d.items():
-        if pd.isnull(v):
+        if isnull(v):
             d[k] = None
 # records looks like:
 # [
