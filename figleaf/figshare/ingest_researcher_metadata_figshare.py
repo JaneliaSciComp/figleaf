@@ -98,10 +98,8 @@ my_private_article = figshare_models.Model(
     defined_type = dt
     )
 
-# Now we have a handy python object. We can access attributes like my_private_article.title, and add attributes fairly easily. 
-# Pydantic has tons of ways to manipulate these objects, e.g. enforce a certain datetime encoding, export to dict e.g. my_item.dict(), and other useful stuff
-
 # Apparently the figshare API doesn't like "null" fields, so I am just removing these attributes.
+# TODO: A more robust solution would be to use exclude as I did in my DataCite ingest script, as described in Pydantic docs
 attrs_to_remove = [
     'custom_fields',
     'custom_fields_list',
