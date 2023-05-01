@@ -1,5 +1,5 @@
 """
-This script is unfinished. Will create a DOI through the DataCite REST API.
+This script is unfinished. Need to troubleshoot. Will (eventually) create a DOI through the DataCite REST API.
 """
 
 import requests

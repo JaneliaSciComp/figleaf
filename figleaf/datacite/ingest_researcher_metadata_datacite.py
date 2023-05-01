@@ -7,6 +7,8 @@ so that our JSON body matches the body we need to POST a request for a new DOI.
 
 See this webpage for more info on creating DOIs: 
 https://support.datacite.org/docs/api-create-dois
+
+Note the bug on line 87 of this script!!
 """
 
 from pandas import read_csv, isnull
@@ -50,9 +52,9 @@ def create_creator(**kwargs):
 
 
 # read in the metadata
-data = read_csv('researcher_metadata.csv', dtype={'id':'Int32'}) # stop pandas from automatically converting int to float
+data = read_csv('researcher_metadata.csv', dtype={'id':'Int32'}) 
 records = data.to_dict(orient='records')
-for d in records: # stupid pandas doesn't let me change NA to something else when I read in the data
+for d in records: # Change NA to None type
     for k, v in d.items():
         if isnull(v):
             d[k] = None
@@ -75,8 +77,7 @@ resource_type_obj = models.Types(resourceType = rT, resourceTypeGeneral = rTG)
 
 
 # Next, identifiers. This field is mandatory, and must be a list.
-# TODO: build out functionality to include RelatedIdentifiers
-# The regular identifier object refers to the DOI. We can (and must) fill it with nonsense, since we don't have a DOI yet.
+# For now, fill it with nonsense, since we don't have a DOI yet.
 identifiers = [ models.Identifier(identifier = "0", identifierType = "DOI") ]
 
 # Next, Creators.
@@ -84,7 +85,7 @@ creator_records = filter_records('Attr', 'creators')
 creator_order = sorted(set( d['id'] for d in creator_records ))
 creator_dicts = []
 for i in creator_order:
-    current_records = filter_records('id', i) # TODO: BUG. THIS FILTERS ALL RECORDS WITH id == i, not just creator records
+    current_records = filter_records('id', i) # TODO: BUG! THIS FILTERS ALL RECORDS WITH id == i, not just creator records
     creator_dict = {}
     for d in current_records:
         if d['Attr_key'] in creator_dict: # e.g. affiliations
@@ -117,8 +118,6 @@ my_item = models.Model(
     publicationYear = pubYear   
     )
 
-# Now we have a handy python object. We can access attributes (e.g. my_item.titles) and add attributes fairly easily. 
-# Pydantic has a lot of handy ways to manipulate these objects.
 # Here, we want to remove the 'identifiers' attribute from the model, because 
 # we don't have a DOI yet (we are trying to create one). 
 # There's probably a more elegant solution than creating a dummy DOI and then excluding it, but this will suffice for now.
