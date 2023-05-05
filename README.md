@@ -6,6 +6,12 @@ The basic approach is similar for the two workflows. I'm using [datamodel-code-g
 Currently, both workflows are very much under construction. I'm only supporting a handful of metadata fields right now.
 
 
+Here's a graphical summary of the overall workflow:
+<img
+  src="figleaf_plan.png"
+  style="display: inline-block; margin: 0 auto; max-width: 250px">
+
+  
 ___
 
 #### Workflow #1: Create figshare articles in batches
@@ -28,10 +34,3 @@ ___
 #### Workflow #2: Create DOIs directly through DataCite
 Not yet up and running.
 
-
-___
-
-Here's a graphical summary of the overall workflow:
-<img
-  src="figleaf_plan.png"
-  style="display: inline-block; margin: 0 auto; max-width: 250px">
