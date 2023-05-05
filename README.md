@@ -5,6 +5,7 @@ The basic approach is similar for the two workflows. I'm using [datamodel-code-g
 
 Currently, both workflows are very much under construction. I'm only supporting a handful of metadata fields right now.
 
+
 ___
 
 #### Workflow #1: Create figshare articles in batches
@@ -21,11 +22,16 @@ Next, I have the researcher's metadata in a **very** carefully formatted excel s
 Next, `create_private_article.py` POSTs a private article with metadata to figshare's database. 
 
 Finally, `upload.py` PUTs a file on figshare associated with that article. 
+
+
 ___
 #### Workflow #2: Create DOIs directly through DataCite
 Not yet up and running.
 
-Here's a graphical overview of the workflow:
+
+___
+
+Here's a graphical summary of the overall workflow:
 <img
   src="figleaf_plan.png"
   style="display: inline-block; margin: 0 auto; max-width: 250px">
