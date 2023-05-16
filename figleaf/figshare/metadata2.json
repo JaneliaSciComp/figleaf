@@ -1,0 +1,37 @@
+{
+    "title": "My cool dataset",
+    "description": "While counting numbers is quite common, little is known about the true meaning of numbers. In this study, a series of random numbers was generated. Surprisingly, we found no evidence that numbers alone are inherently meaningful. This study suggests that numbers are not sufficient to explain their own meaning.",
+    "is_metadata_record": true,
+    "metadata_reason": "Data file to be uploaded separately via API",
+    "tags": [
+        "Single neuron reconstruction"
+    ],
+    "keywords": [
+        "Single neuron reconstruction"
+    ],
+    "categories": [
+        25718,
+        26104
+    ],
+    "categories_by_source_id": [
+        "310112",
+        "320999"
+    ],
+    "authors": [
+        {
+            "id": 2933718,
+            "name": "Virginia Scarlett"
+        },
+        {
+            "name": "Ana Van Gulick"
+        },
+        {
+            "name": "William Shakespeare",
+            "first_name": "William",
+            "last_name": "Shakespeare",
+            "email": "thebard@hotmail.com",
+            "orcid_id": "000-000-12345"
+        }
+    ],
+    "defined_type": "dataset"
+}

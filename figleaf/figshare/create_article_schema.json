@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "is_metadata_record": {
+      "type": "boolean"
+    },
+    "metadata_reason": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^http://"
+      }
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      }
+    },
+    "categories_by_source_id": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "authors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "orcid_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "custom_fields": {
+      "type": "object"
+    },
+    "defined_type": {
+      "type": "string",
+      "enum": ["figure", "online resource", "preprint", "book", "conference contribution", "media", "dataset", "poster", "journal contribution", "presentation", "thesis", "software"]
+    },
+    "funding": {
+      "type": "string"
+    },
+    "group_id": {
+      "type": "integer"
+    }
+  },
+  "required": ["title"]
+}

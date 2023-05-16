@@ -6,9 +6,10 @@ Extracts metadata from the csv, and creates a pydantic object with
 those metadata as attributes. 
 """
 
+#TODO: Still need to add support for tags, references, custom fields, funding, and group_id
+
 from pandas import read_csv, isnull
-import pydantic
-import figshare_models
+import priv_article_models
 
 def filter_records(column, match):
     """
@@ -78,44 +79,26 @@ for d in auth_dicts:
         if k == 'id':
             d[k] = int(v)
 
-auth_objs = [ figshare_models.Author(**d) for d in auth_dicts ]
+auth_objs = [ priv_article_models.Author(**d) for d in auth_dicts ]
 
 # Next, get the defined_type.
 dt = filter_records('Attr', 'defined_type')[0]['Attr_value']
 
 # Finally, create an instance of the Model class, which represents the article we want to create.
-my_private_article = figshare_models.Model(
+my_private_article = priv_article_models.Model(
     title = title,
     description = desc,
     is_metadata_record = True,
     metadata_reason = "Data file to be uploaded separately via API",
     tags = keyw,
     keywords = keyw,
-    references = [],
     categories = cats,
     categories_by_source_id = cat_src,
     authors = auth_objs,
     defined_type = dt
     )
 
-# Apparently the figshare API doesn't like "null" fields, so I am just removing these attributes.
-# TODO: A more robust solution would be to use exclude as I did in my DataCite ingest script, as described in Pydantic docs
-attrs_to_remove = [
-    'custom_fields',
-    'custom_fields_list',
-    'funding',
-    'funding_list',
-    'license',
-    'doi',
-    'handle',
-    'resource_doi',
-    'resource_title',
-    'timeline',
-    'group_id'
-]
-for e in attrs_to_remove:
-    exec(f'del my_private_article.{e}')
-
-# export researcher metadata to json and write to a file
-with open('researcher_metadata.json', 'w') as outF:
-    outF.write(my_private_article.json(indent=4))
+# Export researcher metadata to json and write to a file.
+# Apparently the figshare API doesn't like "null" fields, so I am removing unused attributes with exclude_none.
+with open('metadata2.json', 'w') as outF:
+    outF.write(my_private_article.json(indent=4, exclude_none=True))

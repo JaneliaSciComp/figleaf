@@ -1,8 +1,12 @@
 ﻿Attr,id,Attr_key,Attr_value
 authors,1,name,Virginia Scarlett
 authors,1,id,2933718
-authors,2,url_name,Ana_Van_Gulick
 authors,2,name,Ana Van Gulick
+authors,3,name,William Shakespeare
+authors,3,first_name,William
+authors,3,last_name,Shakespeare
+authors,3,email,thebard@hotmail.com
+authors,3,orcid_id,000-000-12345
 title,NA,title,My cool dataset
 description,NA,description,"While counting numbers is quite common, little is known about the true meaning of numbers. In this study, a series of random numbers was generated. Surprisingly, we found no evidence that numbers alone are inherently meaningful. This study suggests that numbers are not sufficient to explain their own meaning."
 keywords,1,keywords,Single neuron reconstruction
