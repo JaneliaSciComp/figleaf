@@ -1,13 +1,21 @@
-# This readme contains shell commands for creating python models and json schemas from
-# json schemas and json objects.
-# N.B.: If you want to create python models or json schemas 
-# from a json object (as you have to for figshare, since figshare does not provide a schema),
-# you may want to add the --force-optional flag to make all fields optional. 
-# Otherwise, all fields that are filled out in the original json object will be mandatory
-# in the resulting models/schema.
-# N.B.: There isn't one definitive figshare schema. 
-# The schema to create a private article (https://docs.figshare.com/#private_article_create)
-# is different from the schema you would get based on an example article that already exists.
+I found two ways to create JSON schemas for sending information to figshare
+via their REST API. There is no one 'figshare schema'. The schema to create 
+a private article (https://docs.figshare.com/#private_article_create)
+is different from the schema you would get by querying for an article that already exists.
+
+First I tried data-model-code-generator from the pydantic ecosystem. 
+This worked okay, but it requires that you start with some kind of example object.
+Unfortunately, the example JSON object in the figshare documentation
+(see link above) doesn't contain all the metadata fields, and doesn't make clear 
+which fields are required vs. optional: 
+https://help.figshare.com/article/figshare-metadata-schema-overview.
+
+My frustration led me to strategy #2: ask Chat GPT to make a schema.
+Until figshare releases a proper JSON schema, I think this is actually
+the best solution in terms of both efficiency and reproducibility.
+
+SOLUTION #1: Here are various handy commands for creating pydantic models (classes) 
+and/or JSON schemas with datamodel-codegen, in no particular order: 
 
 # Create models from unofficial datacite schema (GET request)
 datamodel-codegen --url https://raw.githubusercontent.com/datacite/schema/732cc7ef29f4cad4d6adfac83544133cd57a2e5e/source/json/kernel-4.3/datacite_4.3_schema.json --input-file-type jsonschema --output datacite_models.py
@@ -26,3 +34,23 @@ datamodel-codegen --input example_from_docs.json --input-file-type json --force-
 import json
 import figshare_models
 open('figshare.jsonschema', 'w').write(json.dumps(figshare_models.Model.schema(), indent=4))
+
+
+SOLUTION #2: 
+
+Hey ChatGPT, please create a JSON schema with the following properties:
+title, which is mandatory and is a string.
+description, which is optional and is a string. 
+is_metadata_record, which is optional and is a boolean.
+metadata_reason, which is optional and is a string.
+tags, which is optional and is an array of strings.
+keywords, which is optional and is an array of strings.
+references, which is optional and is an array of strings, and each string in the array must start with "http://".
+categories, which is optional and is an array of integers.
+categories_by_source_id, which is optional and is an array of strings.
+authors, which is optional and is an array of Authors.
+Author, which is optional and has the following properties, which are all optional: id (integer), name (string), first_name (string), last_name (string), email (string), orcid_id (string). 
+custom_fields, which is optional and is a JSON object.
+defined_type, which is optional and is a string and is one of: figure, online resource, preprint, book, conference contribution, media, dataset, poster, journal contribution, presentation, thesis, software.
+funding, which is optional and is a string.
+group_id, which is optional and is an integer.
