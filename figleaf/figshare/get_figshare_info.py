@@ -8,7 +8,7 @@ python get_figshare_info.py -f categories -i Neurosciences not elsewhere classif
 Get info for one or more authors like so: 
 python get_figshare_info.py -f authors -i Virginia Scarlett, Ana Van Gulick -t 12345678910abcdefghijklm
 
-To access figshare's records for the stage environment, include the -s flag and use your stage account token
+To access figshare's records for the stage environment, include the -s flag and use your stage account token.
 python get_figshare_info.py -s -f authors -i Virginia Scarlett, Ana Van Gulick -t 12345678910abcdefghijklm
 """
 
@@ -47,19 +47,7 @@ def filter_response(res, field):
             final.append(d)
     return(final)
 
-parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='''
-    A script to grab numeric author and category codes from the figshare database.
-
-    Get info for one or more categories like so:
-    python get_figshare_info.py -f categories -i Neurosciences not elsewhere classified, "Structural biology (incl. macromolecular modelling)"
-    (I'm on a Mac, using zsh shell. Double quotes may not be necessary with other shells, e.g. bash.)
-
-    Get info for one or more authors like so: 
-    python get_figshare_info.py -f authors -i Virginia Scarlett, Ana Van Gulick -t 12345678910abcdefghijklm
-
-    To access figshare's records for the stage environment, include the -s flag and use your stage account token. Example:
-    python get_figshare_info.py -s -f authors -i Virginia Scarlett, Ana Van Gulick -t 12345678910abcdefghijklm
-         ''')
+parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description=__doc__)
 parser.add_argument('-i', 
                     '--items', 
                     required = True, 

@@ -1,7 +1,7 @@
 """
 A script to create a private article from a file containing JSON-formatted metadata for that article.
 Offers the user the option to upload one data file to that article. 
-Articles are private before being made public with publish_article.py
+Articles are private before being made public with publish_article.py.
 """
 
 import requests
@@ -64,7 +64,7 @@ def upload_part(file_info, stream, part, up_url):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='A script to create a new private figshare article, with metadata only. Research item will be uploaded later. Token required as a command line argument.')
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-t', 
                         '--token', 
                         required = True, 

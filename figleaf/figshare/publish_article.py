@@ -12,7 +12,7 @@ import create_private_article
 
 CHUNK_SIZE = 10 * (1024 ** 2) # e.g. 10 * (1024 ** 2) = 10 Mb.
 
-parser = argparse.ArgumentParser(description='A script to modify and/or publish a private figshare article with known article id.')
+parser = argparse.ArgumentParser(description=__doc__)
 
 parser.add_argument('-id', 
                     '--article_id', 
