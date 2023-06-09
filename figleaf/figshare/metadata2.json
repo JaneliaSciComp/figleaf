@@ -23,14 +23,14 @@
             "name": "Virginia Scarlett"
         },
         {
+            "id": 650798,
             "name": "Ana Van Gulick"
         },
         {
             "name": "William Shakespeare",
             "first_name": "William",
             "last_name": "Shakespeare",
-            "email": "thebard@hotmail.com",
-            "orcid_id": "000-000-12345"
+            "email": "thebard@hotmail.com"
         }
     ],
     "defined_type": "dataset"
