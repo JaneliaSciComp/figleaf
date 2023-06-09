@@ -4,6 +4,10 @@ Run after creating figshare_models.py (see create_models.readme).
 This script takes researcher_metadata.csv as input.
 Extracts metadata from the csv, and creates a pydantic object with
 those metadata as attributes. 
+Note: For authors, it's best if the user has their figshare metadata up-to-date,
+and then you can just reference the person with their figshare id. 
+This is safer than assembling a bunch of info about them in the spreadsheet,
+and then sending it to figshare on a per-article basis.
 """
 
 #TODO: Still need to add support for tags, references, custom fields, funding, and group_id
@@ -100,5 +104,5 @@ my_private_article = priv_article_models.Model(
 
 # Export researcher metadata to json and write to a file.
 # Apparently the figshare API doesn't like "null" fields, so I am removing unused attributes with exclude_none.
-with open('metadata2.json', 'w') as outF:
+with open('researcher_metadata.json', 'w') as outF:
     outF.write(my_private_article.json(indent=4, exclude_none=True))

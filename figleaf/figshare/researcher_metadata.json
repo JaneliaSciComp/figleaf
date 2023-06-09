@@ -9,7 +9,6 @@
     "keywords": [
         "Single neuron reconstruction"
     ],
-    "references": [],
     "categories": [
         25718,
         26104
@@ -20,12 +19,18 @@
     ],
     "authors": [
         {
-            "name": "Virginia Scarlett",
-            "id": 2933718
+            "id": 2933718,
+            "name": "Virginia Scarlett"
         },
         {
-            "name": "Ana Van Gulick",
-            "id": null
+            "id": 650798,
+            "name": "Ana Van Gulick"
+        },
+        {
+            "name": "William Shakespeare",
+            "first_name": "William",
+            "last_name": "Shakespeare",
+            "email": "thebard@hotmail.com"
         }
     ],
     "defined_type": "dataset"
