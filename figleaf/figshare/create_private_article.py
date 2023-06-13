@@ -11,11 +11,10 @@ import sys
 import hashlib
 
 CHUNK_SIZE = 10 * (1024 ** 2) # e.g. 10 * (1024 ** 2) = 10 Mb.
-# For bug testing: my JSON-formatted metadata file is researcher_metadata.json
+base_url = "https://api.figsh.com/v2/account/articles" #TODO: use --stage flag instead of hard-coding
 
 def checkOK(response_to_check):
     if not response_to_check.ok:
-    #if response_to_check.status_code != requests.codes.ok:
         print(f"Request failed with error code {response_to_check.status_code}")
         print(response_to_check.text) 
         sys.exit()
@@ -59,8 +58,6 @@ def upload_part(file_info, stream, part, up_url):
     part_res = requests.put(part_url, data=part_data)
     checkOK(part_res)
 
-#def complete_upload(url, article_id, file_id):
-#    requests.post('{}/{}/files/{}'.format(url, article_id, file_id))
 
 
 if __name__ == "__main__":
@@ -74,11 +71,11 @@ if __name__ == "__main__":
 
     metadata_file = input("Please enter the name of the JSON-formatted metadata file: ")
     data = open(metadata_file, "rb").read()
-    base_url = "https://api.figsh.com/v2/account/articles"
     headers = {'Authorization': 'token {}'.format(args.token)}
     response = requests.post(base_url, headers=headers, data=data)
     checkOK(response)
-    print(f"New private article with ID {json.loads(response.content)['entity_id']} successfully created from {metadata_file}.")
+    new_article_id = json.loads(response.content)['entity_id']
+    print(f"New private article with ID {new_article_id} successfully created from {metadata_file}.")
 
     proceed = input(f"Would you like to upload a file to the article you just created? (y/n): ")
     if proceed.lower() == "y":
