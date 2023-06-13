@@ -59,7 +59,6 @@ def upload_part(file_info, stream, part, up_url):
     checkOK(part_res)
 
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-t', 
@@ -76,6 +75,12 @@ if __name__ == "__main__":
     checkOK(response)
     new_article_id = json.loads(response.content)['entity_id']
     print(f"New private article with ID {new_article_id} successfully created from {metadata_file}.")
+
+    doi = input('Would you like to reserve a DOI for this article? (y/n): ')
+    if doi.lower() == 'y':
+        doi_res = requests.post(f"{base_url}/{args.article_id}/reserve_doi", headers=headers)
+        checkOK(doi_res)
+        print("DOI reserved successfully.")
 
     proceed = input(f"Would you like to upload a file to the article you just created? (y/n): ")
     if proceed.lower() == "y":
