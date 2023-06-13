@@ -82,17 +82,25 @@ if __name__ == "__main__":
         checkOK(doi_res)
         print("DOI reserved successfully.")
 
-    proceed = input(f"Would you like to upload a file to the article you just created? (y/n): ")
-    if proceed.lower() == "y":
-        file_to_upload = input("Please enter the name of the file to upload: ")
-        print("Uploading file ", file_to_upload, f"in {CHUNK_SIZE/(1024 ** 2)}Mb chunks")
-        file_info = initiate_new_upload(base_url, headers, json.loads(response.content)['entity_id'], file_to_upload)
-        # Until here we used the figshare API; the following lines use the figshare upload service API.
-        upload_parts(headers, file_info, file_to_upload) # looks like e.g. {'location': 'https://api.figsh.com/v2/account/articles/8417838/files/830411224'}
-        # complete the upload
-        requests.post(file_info['location'], headers=headers)
-    else:
-        print("Exiting.")
-        sys.exit()
+    while True:
+        proceed = input(f"Would you like to upload a file to the article you just created? (y/n): ")
+        if proceed.lower() == "y":
+            file_to_upload = input("Please enter the name of the file to upload: ")
+            print("Uploading file ", file_to_upload, f"in {CHUNK_SIZE/(1024 ** 2)}Mb chunks")
+            file_info = initiate_new_upload(base_url, headers, json.loads(response.content)['entity_id'], file_to_upload)
+            # Until here we used the figshare API; the following lines use the figshare upload service API.
+            upload_parts(headers, file_info, file_to_upload) # looks like e.g. {'location': 'https://api.figsh.com/v2/account/articles/8417838/files/830411224'}
+            # complete the upload
+            up_res = requests.post(file_info['location'], headers=headers)
+            checkOK(up_res)
+            print("Upload successful.")
+        elif proceed.lower() == "n":
+            break  # break out of the while loop
+        else:
+            print("Invalid input. Please enter 'y' to upload a file, or 'n' to cancel.")
 
-    print("Upload complete.")
+    publish = input(f"Would you like to publish this article now? (y/n): ")
+    if publish.lower() == 'y':
+        pub_res = requests.post(f"{base_url}/{args.article_id}/publish", headers=headers)
+        checkOK(pub_res)
+        print("Article published successfully.")
