@@ -10,7 +10,7 @@ import requests
 import jrc_common.jrc_common as JRC
 
 # Globals
-MAX = {'doi': 3, 'title': 5, 'type': 4}
+MAX = {'doi': 3, 'title': 5, 'type': 4, 'size': 4, 'views': 5}
 TOKEN = "FIGSHARE_JWT"
 
 def terminate_program(msg=None):
@@ -41,8 +41,23 @@ def call_responder(server, endpoint):
     except requests.exceptions.RequestException as err:
         terminate_program(err)
     if req.status_code != 200:
-        terminate_program(f"Status: {str(req.status_code)}")
+        terminate_program(f"{url}\nStatus: {str(req.status_code)}")
     return req.json()
+
+
+def humansize(num, suffix='B'):
+    ''' Return a human-readable storage size
+        Keyword arguments:
+          num: size
+          suffix: default suffix
+        Returns:
+          string
+    '''
+    for unit in ['', 'K', 'M', 'G', 'T']:
+        if abs(num) < 1024.0:
+            return f"{num:3.1f}{unit}{suffix}"
+        num /= 1024.0
+    return f"{num:.1f}P{suffix}"
 
 
 def process_row(row):
@@ -59,8 +74,28 @@ def process_row(row):
     doi = row['doi'] if 'doi' in row and row['doi'] else ''
     if len(doi) > MAX['doi']:
         MAX['doi'] = len(doi)
+    size = views = 0
+    if row['published_date']:
+        # Get article details
+        result = call_responder('figshare', f"articles/{row['id']}")
+        if "files" in result:
+            for file in result['files']:
+                if "size" in file:
+                    size += file['size']
+        size = humansize(size)
+        if len(size) > MAX['size']:
+            MAX['size'] = len(size)
+        # Views
+        result = call_responder('figshare_stats', f"total/views/article/{row['id']}")
+        if "totals" in result:
+            views = result['totals']
+        views = f"{views:,}"
+        if len(views) > MAX['views']:
+            MAX['views'] = len(views)
+    if not size:
+        size = "-"
     return [row['title'], row['defined_type_name'],
-            'Yes' if row['published_date'] else 'No', doi]
+            'Yes' if row['published_date'] else 'No', doi, size, views]
 
 
 def process_articles():
@@ -83,11 +118,13 @@ def process_articles():
             article.append(process_row(row))
         page += 1
     print(f"{'Title':<{MAX['title']}}  {'Type':<{MAX['type']}}  " \
-          + f"Published  {'DOI':<{MAX['doi']}}")
-    print(f"{'-'*MAX['title']}  {'-'*MAX['type']}  {'-'*9}  {'-'*MAX['doi']}")
+          + f"Published  {'DOI':<{MAX['doi']}}  {'Size':<{MAX['size']}}  {'Views':<{MAX['views']}}")
+    print(f"{'-'*MAX['title']}  {'-'*MAX['type']}  {'-'*9}  {'-'*MAX['doi']}  {'-'*MAX['size']}  " \
+          + f"{'-'*MAX['views']}")
     for row in article:
         print(f"{row[0]:<{MAX['title']}}  {row[1]:<{MAX['type']}}  " \
-              + f"{row[2]:^9}  {row[3]:<{MAX['doi']}}")
+              + f"{row[2]:^9}  {row[3]:<{MAX['doi']}}  {row[4]:<{MAX['size']}}  " \
+              + f"{row[5]:<{MAX['views']}}")
 
 # -----------------------------------------------------------------------------
 
