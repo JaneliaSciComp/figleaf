@@ -1,42 +1,5 @@
-I found two ways to create JSON schemas for sending information to figshare
-via their REST API. There is no one 'figshare schema'. The schema to create 
-a private article (https://docs.figshare.com/#private_article_create)
-is different from the schema you would get by querying for an article that already exists.
-
-First I tried data-model-code-generator from the pydantic ecosystem. 
-This worked okay, but it requires that you start with some kind of example object.
-Unfortunately, the example JSON object in the figshare documentation
-(see link above) doesn't contain all the metadata fields, and doesn't make clear 
-which fields are required vs. optional: 
-https://help.figshare.com/article/figshare-metadata-schema-overview.
-
-My frustration led me to strategy #2: ask Chat GPT to make a schema.
-Until figshare releases a proper JSON schema, I think this is actually
-the best solution in terms of both efficiency and reproducibility.
-
-SOLUTION #1: Here are various handy commands for creating pydantic models (classes) 
-and/or JSON schemas with datamodel-codegen, in no particular order: 
-
-# Create models from unofficial datacite schema (GET request)
-datamodel-codegen --url https://raw.githubusercontent.com/datacite/schema/732cc7ef29f4cad4d6adfac83544133cd57a2e5e/source/json/kernel-4.3/datacite_4.3_schema.json --input-file-type jsonschema --output datacite_models.py
-
-# Create models from unofficial datacite schema (from file)
-datamodel-codegen --input datacite_4.3_schema.json --input-file-type jsonschema --output datacite_models.py
-
-# Create models from a random figshare article (GET request)
-datamodel-codegen --url https://api.figshare.com/v2/articles/22154810 --input-file-type json --force-optional --output figshare_example_models.py
-
-# Create models from a figshare json object (from file)
-# This object is from https://docs.figshare.com/#private_article_create
-datamodel-codegen --input example_from_docs.json --input-file-type json --force-optional --output figshare_models.py
-
-#From within python, you can (but don't need to) create a figshare JSON schema like so:
-import json
-import figshare_models
-open('figshare.jsonschema', 'w').write(json.dumps(figshare_models.Model.schema(), indent=4))
-
-
-SOLUTION #2: 
+This is how I created private_article_schema.json, a jsonschema
+for POSTing new private articles to the figshare server. 
 
 Hey ChatGPT, please create a JSON schema with the following properties:
 title, which is mandatory and is a string.
