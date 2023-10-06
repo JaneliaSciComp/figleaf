@@ -8,7 +8,7 @@ Currently, both workflows are very much under construction. I'm only supporting 
 
 Here's a graphical summary of the figshare workflow:
 <img
-  src="figleaf_plan.png"
+  src="READMEimg.png"
   style="display: inline-block; margin: 0 auto; max-width: 250px">
 
 
