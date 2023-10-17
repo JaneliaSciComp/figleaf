@@ -1,5 +1,7 @@
 """
 A script to grab category or author information from figshare records.
+Prints the output to the terminal.
+The results should be manually entered into "researcher_metadata_figshare.xlsx" (for now).
 
 Get info for one or more categories like so:
 python get_figshare_info.py -f categories -i Neurosciences not elsewhere classified, "Structural biology (incl. macromolecular modelling)"
@@ -10,6 +12,12 @@ python get_figshare_info.py -f authors -i Virginia Scarlett, Ana Van Gulick -t 1
 
 To access figshare's records for the stage environment, include the -s flag and use your stage account token.
 python get_figshare_info.py -s -f authors -i Virginia Scarlett, Ana Van Gulick -t 12345678910abcdefghijklm
+
+Note that the same entity will have different IDs for the stage and production environments.
+So, for example:
+python get_figshare_info.py -f authors -i Virginia Scarlett -t <my production token> 
+will yield different results from:
+python get_figshare_info.py -f authors -i Virginia Scarlett -t <my stage token> -s
 """
 
 import requests
