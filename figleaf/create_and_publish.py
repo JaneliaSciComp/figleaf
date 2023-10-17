@@ -1,7 +1,7 @@
 """
 A script to create a private article from a file containing JSON-formatted metadata for that article.
 Offers the user the option to upload one data file to that article. 
-Articles are private before being made public with publish_article.py.
+Articles are private before being made public.
 """
 
 import requests
