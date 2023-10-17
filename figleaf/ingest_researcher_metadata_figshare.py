@@ -16,7 +16,8 @@ with those metadata as attributes. The result is a JSON document describing the 
 want to create through the figshare API. (researcher_metadata.json)
 
 Just run this script with no command line arguments. priv_article_models.py should be in your $PYTHONPATH  
-and researcher_metadata_figshare.csv should be in your working directory. 
+and researcher_metadata_figshare.csv should be in example_data/, which should be in your working directory.
+(For now. This is all very clunky and temporary.) 
 
 Note: For authors, it's best if the user has their figshare metadata up-to-date,
 and then you can just reference the person with their figshare id. 
@@ -53,7 +54,7 @@ def get_dicts_from_records(myrecords):
 
 
 # read in the metadata
-data = read_csv('researcher_metadata_figshare.csv', dtype={'id':'Int32'}) # stop pandas from automatically converting int to float
+data = read_csv('example_data/researcher_metadata_figshare.csv', dtype={'id':'Int32'}) # stop pandas from automatically converting int to float
 records = data.to_dict(orient='records')
 for d in records: # change NA to None when I read in the data
     for k, v in d.items():
@@ -118,5 +119,5 @@ my_private_article = priv_article_models.Model(
 
 # Export researcher metadata to json and write to a file.
 # Apparently the figshare API doesn't like "null" fields, so I am removing unused attributes with exclude_none.
-with open('researcher_metadata.json', 'w') as outF:
+with open('example_data/researcher_metadata.json', 'w') as outF:
     outF.write(my_private_article.json(indent=4, exclude_none=True))
