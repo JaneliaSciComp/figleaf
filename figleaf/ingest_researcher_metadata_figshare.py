@@ -11,10 +11,12 @@ datamodel-codegen --input private_article_schema.json --input-file-type jsonsche
 Second, you'll need the researcher metadata as a csv file. I am first creating an excel file
 and then doing "Save As" csv to convert to csv.
 
-
 This script extracts metadata from the csv, and creates a single "my_private_article" object 
 with those metadata as attributes. The result is a JSON document describing the article you 
-want to create through the figshare API.
+want to create through the figshare API. (researcher_metadata.json)
+
+Just run this script with no command line arguments. priv_article_models.py should be in your $PYTHONPATH  
+and researcher_metadata_figshare.csv should be in your working directory. 
 
 Note: For authors, it's best if the user has their figshare metadata up-to-date,
 and then you can just reference the person with their figshare id. 
