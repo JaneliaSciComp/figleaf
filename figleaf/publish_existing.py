@@ -17,7 +17,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('-id',
                     '--article_id',
                     required = True,
-                    help = 'Personal token, most easily obtained through the figshare website.'
+                    help = 'Article ID, which was printed to the terminal at the time of creation.'
                     )
 parser.add_argument('-t',
                     '--token',

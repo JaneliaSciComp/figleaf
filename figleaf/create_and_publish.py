@@ -1,7 +1,9 @@
 """
 A script to create a private article from a file containing JSON-formatted metadata for that article.
 Offers the user the option to upload one data file to that article. 
-Articles are private before being made public.
+Articles are private before being made public. Run this script with -t and your stage token.
+Currently the stage URL is hard-coded into the script, so doesn't work for production.
+Write down the article ID that is printed to the terminal!
 """
 
 import requests
