@@ -15,19 +15,17 @@ Here's a graphical summary of the workflow:
 ___
 
 #### Workflow #1: Create figshare articles in batches
-First, I create Python classes from a figshare JSON schema based on this page in figshare's API docs, [here](https://docs.figshare.com/#private_article_create):
+Before you can programmatically create a figshare article, you need two things: the metadata for the article, in a web-ready format (JSON) (authors, title, etc.); and you need a schema against which to validate those metadata, to make sure they're good to go.
 
-`datamodel-codegen --input example_from_docs.json --input-file-type json --force-optional --output figshare_models.py`
+I created the schema first, by taking the essential metadata fields from the figshare metadata overview, [here] (https://help.figshare.com/article/figshare-metadata-schema-overview), and figshare's API docs, [here](https://docs.figshare.com/#private_article_create). See figleaf/READMEmodels.txt.
 
-Since figshare doesn't provide a schema, I don't know which metadata fields are mandatory or optional. So I'm just making everything optional. 
+Before we can create a JSON document with metadata for the experiment, there are certain metadata fields we can only fill out by querying the figshare server. These are authors, categories, and keywords. We have to use figshare's numerical codes for the categories and keywords we want. I do this with my script `get_figshare_info.py`. For usage instructions, run that script with the `-h` flag.
 
-Next, we need to include categories and keywords in our metadata, and we have to use figshare's numerical codes for the categories and keywords we want. (This is all required by figshare.) I do this with my script `get_figshare_info.py`. For usage instructions, run that script with the `-h` flag.
+Next, I combine the researcher's metadata and figshare's numerical codes into a **very** carefully formatted excel sheet, which I export to csv. Finally, I convert the csv to JSON (with compatibility checking) with `ingest_researcher_metadata.py`. 
 
-Next, I have the researcher's metadata in a **very** carefully formatted excel sheet, which I export to csv, and convert to JSON with `ingest_researcher_metadata.py`. 
+Next, `create_and_publish.py` POSTs a private article with metadata to figshare's server, and give the user the option to add a DOI, add one or more data files, and publish (that is, make the private article public,) right away. 
 
-Next, `create_private_article.py` POSTs a private article with metadata to figshare's database. 
-
-Finally, `upload.py` PUTs a file on figshare associated with that article. 
+Finally, `publish_existing.py` gives the user the option to PUT a file on figshare associated with that article. The user must know the article id to do this. create_and_publish.py prints the article id when the private article is created, so that's the easiest way to get the article id. In theory, you can also get all your articles with a GET request, though I'm struggling with this at the moment. 
 
 
 ___
