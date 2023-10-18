@@ -15,13 +15,16 @@ Here's a graphical summary of the workflow:
 ___
 
 #### Workflow #1: Create figshare articles in batches
-Before you can programmatically create a figshare article, you need two things: the metadata for the article, in a web-ready format (JSON) (authors, title, etc.); and you need a schema against which to validate those metadata, to make sure they're good to go.
+Before you can programmatically create a figshare article, you need two things: the metadata for the article, (authors, title, etc.) in a web-ready format (JSON); and you need a schema against which to validate those metadata, to make sure they're good to go.
 
-I created the schema first, by taking the essential metadata fields from the figshare metadata overview, [here] (https://help.figshare.com/article/figshare-metadata-schema-overview), and figshare's API docs, [here](https://docs.figshare.com/#private_article_create). See figleaf/READMEmodels.txt.
+I created the schema first, by taking the essential metadata fields from the figshare metadata overview, [here] (https://help.figshare.com/article/figshare-metadata-schema-overview), and figshare's API docs, [here](https://docs.figshare.com/#private_article_create). See figleaf/READMEmodels.txt. To be able to work with this schema in python, you need to create some generic python classes (pydantic calls these "models") from the JSON schema objects. You'll wrangle the researcher metadata into instances of these python classes. 
+I call the file containing these classes (models) priv_article_models.py. You can create it by running datamodel-code-generator on the figshare private article JSON schema.
+That command will probably look something like this:
+datamodel-codegen --input private_article_schema.json --input-file-type jsonschema --output priv_article_models.py
 
 Before we can create a JSON document with metadata for the experiment, there are certain metadata fields we can only fill out by querying the figshare server. These are authors, categories, and keywords. We have to use figshare's numerical codes for the categories and keywords we want. I do this with my script `get_figshare_info.py`. For usage instructions, run that script with the `-h` flag.
 
-Next, I combine the researcher's metadata and figshare's numerical codes into a **very** carefully formatted excel sheet, which I export to csv. Finally, I convert the csv to JSON (with compatibility checking) with `ingest_researcher_metadata.py`. 
+Next, I combine the researcher's metadata and figshare's numerical codes into a **very** carefully formatted excel sheet, which I export "Save As" to csv. Finally, I convert the csv to JSON (with compatibility checking) with `ingest_researcher_metadata.py`. 
 
 Next, `create_and_publish.py` POSTs a private article with metadata to figshare's server, and give the user the option to add a DOI, add one or more data files, and publish (that is, make the private article public,) right away. 
 

@@ -1,15 +1,5 @@
 """
 A script to produce a JSON file with all the metadata you need to create a new private article.
-You need two inputs: 
-
-First, you need the generic python classes (pydantic calls these "models") that you'll use to
-instantiate the specific objects you'll upload to figshare. I call this priv_article_models.py.
-You can create it by running datamodel-code-generator on the figshare private article JSON schema.
-That command will probably look something like this:
-datamodel-codegen --input private_article_schema.json --input-file-type jsonschema --output priv_article_models.py
-
-Second, you'll need the researcher metadata as a csv file. I am first creating an excel file
-and then doing "Save As" csv to convert to csv.
 
 This script extracts metadata from the csv, and creates a single "my_private_article" object 
 with those metadata as attributes. The result is a JSON document describing the article you 
