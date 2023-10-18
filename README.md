@@ -28,7 +28,7 @@ Next, I combine the researcher's metadata and figshare's numerical codes into a 
 
 Next, `create_and_publish.py` POSTs a private article with metadata to figshare's server, and gives the user the option to add a DOI, add one or more data files, and publish (that is, make the private article public,) right away. 
 
-Finally, `publish_existing.py` gives the user the option to PUT a file on figshare associated with that article. The user must know the article id to do this. create_and_publish.py prints the article id when the private article is created, so that's the easiest way to get the article id. In theory, you can also get all your articles with a GET request, though I'm struggling with this at the moment. 
+Finally, `publish_existing.py` gives the user the option to PUT a file on figshare associated with that article. The user must know the article id to do this. create_and_publish.py prints the article id when the private article is created, so that's the easiest way to get the article id. You can also do something like this: `curl -X GET https://api.figsh.com/v2/account/articles -H "Authorization: token <mytoken>"` to quickly see all your articles. 
 
 
 ___
