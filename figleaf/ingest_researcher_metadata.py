@@ -54,7 +54,7 @@ def get_dicts_from_records(myrecords):
 
 
 # read in the metadata
-data = read_csv('example_data/researcher_metadata_figshare.csv', dtype={'id':'Int32'}) # stop pandas from automatically converting int to float
+data = read_csv('example_data/researcher_metadata.csv', dtype={'id':'Int32'}) # stop pandas from automatically converting int to float
 records = data.to_dict(orient='records')
 for d in records: # change NA to None when I read in the data
     for k, v in d.items():
